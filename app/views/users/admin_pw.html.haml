@@ -1,0 +1,9 @@
+- form_tag adminify_user_path, :method => :put do
+
+  .group
+    %label Password, please
+    = password_field_tag 'password'
+    
+  .group
+    = submit_tag 'Make it so.'
+  

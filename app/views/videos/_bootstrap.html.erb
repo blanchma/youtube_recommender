@@ -1,0 +1,50 @@
+
+<script type='text/javascript'>
+
+  var userId = null;
+  var userName = null;
+  var userSlug = null;
+  
+  var player = null;
+  var playerView = null;
+  var video = null;
+  var feedsController = null;
+  var watchController = null;
+
+
+<% if user_signed_in? %>
+    var userSignedIn =  true;
+    var userOnDebug = <%=  current_user.debug %>;
+    var signedUserId = <%=  current_user.id %>;
+<% else %>
+    var userSignedIn =  false;
+    var userOnDebug = false;
+<% end %>
+
+
+
+
+  /* After load */
+  document.observe("dom:loaded", function() {
+      player = new Player();
+      playerView = new PlayerView ();
+       watchController = new WatchController(<%= params[:id] %>);
+      
+  <% if user_signed_in? && current_user.activated? %>   
+        feedsController = new FeedsController(5,60);
+        feedsController.configFeeds();
+        playlistController.publish_facebook = <%= user_signed_in? ? current_user.publish_to_fb? : false %>;
+        playlistController.publish_twitter = <%= user_signed_in? ? current_user.publish_to_tw? : false %>;
+        
+        searchFollowing.delay(3);
+        searchFollowers.delay(4);
+        flaresController =  new FlaresController();
+
+  <% end %>    
+
+    setInfoMessage.delay(3,"<%= flash[:notice] %>");
+
+  });
+
+
+</script>

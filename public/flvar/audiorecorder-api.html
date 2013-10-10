@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" />
+    <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js" type="text/javascript"></script> 
+
+<title>Flv Audio Recrorder</title>
+</head>
+<body bgcolor="#ffffff">
+<script>
+	function btSavePressed(streamName,streamDuration,userId,recorderId){
+		//this function is called when the SAVE button is pressed and it is called with 4 parameters: 
+		//streamName: the file name of the new audio recording on the media server including the .flv extension
+		//streamDuration: duration of the recorded audio file in seconds but accurate to the millisecond (like this: 4.322)
+		//userId: the userId sent via flash vars or avc_settings.php
+		//recorderId: the recorderId sent via flash vars, to be used when there are many recorders on the same web page
+		
+		alert("btSavePressed("+streamName+","+streamDuration+","+userId+","+recorderId+")");
+		}
+</script>
+	<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="320" height="140" id="audiorecorder" align="middle">
+	<param name="allowScriptAccess" value="sameDomain" />
+	<param name="bgcolor" value="#eeeeee" />  
+	<param name="wmode" value="transparent">
+	<param name="movie" value="audiorecorder.swf?userId=123&recorderId=456&sscode=html" />
+	<embed bgcolor="#eeeeee"  src="audiorecorder.swf?userId=123&recorderId=456&sscode=html" width="320" height="140" name="audiorecorder" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" />
+	</object>
+	
+	<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="320" height="140" id="audiorecorder" align="middle">
+	<param name="allowScriptAccess" value="always" />
+	<param name="bgcolor" value="#eeeeee" />  
+	<param name="wmode" value="opaque">
+	<param name="movie" value="audiorecorder.swf?userId=123&recorderId=456&sscode=html" />
+	<embed bgcolor="#eeeeee"  src="audiorecorder.swf?userId=123&recorderId=456&sscode=html" width="320" height="140" name="audiorecorder"  allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer"  />
+	</object>
+
+
+</body>
+</html>
+
+<script>
+var recorder = null;
+
+
+
+  var flashvars = {
+    recorderId: '501'
+  };
+  var params = {
+    wmode:"opaque",
+    menu: "true"
+ 
+  };
+  var attributes = {
+  id: 'audiorecorder'
+
+  };
+
+ swfobject.embedSWF("/audiorecorder.swf?sscode=html", "rec_container", "320", "160", "9.0.0","expressInstall.swf", flashvars, params, attributes);
+
+
+</script>

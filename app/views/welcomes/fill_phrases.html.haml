@@ -1,0 +1,58 @@
+%div.phrases
+
+  %h1= "Hi, #{current_user.email}!"
+
+  
+
+  %p
+    To start using MyNew.TV, tell us some of the things you're interested in.
+  %p
+    We'll use this information to start building you a customized MyNew.TV channel. MyNew.TV
+    will learn what you like and don't like as you rate the videos it shows you!
+  
+  %br/
+  
+  %h2 To get started quickly, we can learn about you from Facebook
+  
+  - if current_user.facebook?
+    = fb_button_link_to 'Use my Facebook profile',  wait_facebook_path
+  - else
+    = fb_connect_button
+    
+
+  %p
+    %br/
+
+  %h2 Or fill this form 
+    
+  = form_tag :welcomes, :method => :post do
+    = flash[:notice]
+    %p
+      %span.example
+        Separate different phrases with a comma, e.g., "Howard's End, Being There, Mighty Ducks"
+
+    .group
+      = label_tag 'movies', "Some Favorite Movies"
+      = text_field_tag('movies', @movies, :size => 40)
+      %p.help ex: Rambo, Apocalypse Now, Star Wars, Return of the Jedi
+      
+    .group
+      = label_tag 'hobbies', "Any Hobbies or Interests?"
+      %span
+        = text_field_tag('hobbies', @hobbies, :size => 40)
+        %p.help ex: fishing, skydiving, scrapbooking, furniture design 
+    .group
+      = label_tag 'tv', "Favorite TV Shows"
+      %span
+        = text_field_tag('tv', @tv, :size => 40)
+        %p.help ex: Seinfeld, 30 Rock, Top Chef
+        
+    .group
+      = label_tag 'music', 'What Music/Bands/Genres do you like?'
+      %span
+        = text_field_tag('music', @music, :size => 40)
+        %p.help ex: jazz, Charles Mingus, John Coltrane, Charlie Parker
+
+    %center= submit_tag("Let's get started!", :class => "awesome blue")
+    
+    

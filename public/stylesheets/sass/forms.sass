@@ -1,0 +1,58 @@
+form
+  label, input, select
+    display: block
+    margin: 0 0 0 0px
+    clear: both
+  
+  label
+    font-weight: bold
+  
+  input[type=checkbox], input[type=submit], input[type=radio]
+    clear: none
+    display: inline
+    
+  input[type=text], input[type=password], input[type=textarea]
+    width: 400px
+    padding: 3px
+    
+  input[type=radio]+label, input[type=checkbox]+label
+    display: inline
+    
+  label[for=remember_me]
+    display: inline
+
+  .example
+    background-color: #f0f09e
+    padding: 0.2em
+
+  p.help
+    color: #777
+    font-size: 0.8em
+
+  .group
+    margin-bottom: 1em
+    clear: both
+    
+    textarea
+      height: 4em
+      width: 100%
+    
+    input+input
+      margin-top: 0.5em
+      
+#fb_login, #pw_login, #fb_signup, #pw_signup
+  background: #dedede
+  border: 1px solid #999
+  padding: 1em
+  width: 50%
+  margin-bottom: 2em
+  
+  p.privacy
+    font-size: 0.675em
+    margin-bottom: 1em
+  p.forgot
+    font-size: 0.875em
+    
+    a
+      color: black
+      

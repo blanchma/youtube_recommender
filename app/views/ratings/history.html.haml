@@ -1,0 +1,115 @@
+%h2 Last User Signed In
+%table#users
+  %thead
+    %tr
+      %th Id
+      %th Email
+      %th Last Sign in At
+      %th Fb?
+      %th Tw?
+      %th #Likes
+      %th #Watched
+      %th #Hated
+    
+      %th #Total
+      %th #AvgScores
+    
+  %tbody
+    - @users.each do |user|
+      %tr
+        %td= user.id
+        %td
+          %a{:onclick => "javascript: showUser('#{user.id}');", :href => "#users_data", :style => "color: blue;"}= user.email[0,20]
+        %td= user.last_sign_in_at
+        %td= user.facebook?
+        %td= user.twitter?
+        %td= user.ratings.liked.count
+        %td= user.ratings.watched.count
+        %td= user.ratings.hated.count
+        
+        %td= user.ratings.count
+        - avg = user.ratings.sum("video_score") / user.ratings.where("video_score is not null").count
+        %td= avg.round 4 unless avg.inspect == "NaN"
+%br
+
+#users_data{:name => "users_data"}
+  - @users.each do |user|
+    %div{:id => user.id, :style => "display: none;"}
+      %h4= user.email
+      %table{:align => "center"}
+        %thead
+          %tr
+            %th Date
+            %th #likes
+            %th #hates
+
+            %th #watched
+            %th #total
+            %th %liked
+            %th 7-day avg
+           
+          
+        %tbody
+          - @user_dates.each do |date|
+            - break if Time.parse(date.to_s) < Time.parse(user.activated_at.to_s)          
+            %tr
+              %td= date.to_s(:db)
+              %td= @users_data["#{user.id}:#{date.to_s(:db)}"][:likes]
+              %td= @users_data["#{user.id}:#{date.to_s(:db)}"][:hates]
+
+              %td= @users_data["#{user.id}:#{date.to_s(:db)}"][:watched]
+              %td= @users_data["#{user.id}:#{date.to_s(:db)}"][:total]
+              %td= number_to_percentage @users_data["#{user.id}:#{date.to_s(:db)}"][:percent_liked], :precision => 2
+              %td= number_to_percentage @users_data["#{user.id}:#{date.to_s(:db)}"][:avg_percent_liked], :precision => 2
+
+%br
+
+%h2 Total like/hate ratios, accross all users
+%table
+  %thead
+    %tr
+      %th Date
+      %th #likes
+      %th #hates
+
+      %th #watched
+      %th #total
+      %th %liked
+      %th 7-day avg
+    
+  %tbody
+    - @dates.each do |date|
+      %tr
+        %td= date.to_s(:db)
+        %td= @data[date.to_s(:db)][:likes]
+        %td= @data[date.to_s(:db)][:hates]
+
+        %td= @data[date.to_s(:db)][:watched]
+        %td= @data[date.to_s(:db)][:total]
+        %td= number_to_percentage @data[date.to_s(:db)][:percent_liked],     :precision => 2
+        %td= number_to_percentage @data[date.to_s(:db)][:avg_percent_liked], :precision => 2
+        
+:javascript
+
+    function showUser(id) {
+      $("users_data").childElements("div").each (function (el) {
+        el.hide();
+      });
+      $(id).toggle();
+    }
+        
+:css
+  
+  #users_data {
+   text-align: center;
+   margin: 0 auto 0 auto; 
+  }
+  
+  #users_data h4 {
+   font-weight: bold;
+   color: blue; 
+  }
+  
+  #users_data table {
+   border-color: blue; 
+  }

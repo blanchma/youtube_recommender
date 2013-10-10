@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+  <head>
+    <title>MyNew.TV</title>
+    <%= stylesheet_link_tag "reset-min", "layout", "awesome_buttons","modal", "player2" %>
+    <%= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js', 'https://ajax.googleapis.com/ajax/libs/scriptaculous/1.8.3/scriptaculous.js', 'rails'  %>
+    <%= yield(:head) %>
+    <%= csrf_meta_tag %>
+  </head>
+  <body>    
+    <div id="container">
+
+      <div class='player' id='header'>
+        <div id="logo_section">
+          <%= link_to image_tag('/images/player/logo.jpg'), home_path %>
+          <div class='tweet_button'>
+            <%= link_to "Tweet", "http://twitter.com/share", :class=>"twitter-share-button", "data-url"=>"http://mynew.tv", "data-text"=>"MyNew.TV helps you discover & share things you love", "data-count"=>"horizontal", "data-via"=>"mynewtv" %>
+          </div>
+
+          <div class='likes_button'>
+            <fb:like action='like' allowTransparency='true' colorscheme='dark' font='arial' height='35' layout='button_count' show_faces='false' width='220'></fb:like>
+          </div>
+
+        </div>
+        <div id='header_buttons'>
+          <% if user_signed_in? && current_user.activated? %>
+            <span id="user_name">
+              Hi, <%= current_user.email %>
+            </span>
+            <% if current_user.admin? %>
+              <% if current_user.debug %>
+                <%= link_to (image_tag('icons/black/btn_debug.png', :title => 'Debug OFF' )),     player_debug_toggle_path, :class => 'buttons_medium_awesome red' %>
+              <% else %>
+                <%= link_to (image_tag('icons/black/btn_debug.png', :title => 'Debug ON' )),     player_debug_toggle_path, :class => 'buttons_medium_awesome grey' %>
+              <% end %>
+
+              <%= link_to (image_tag('icons/black/btn_admin.png', :title => 'Admin Panel' )), admin_debug_path, :class => 'buttons_medium_awesome  orange' %>
+            <% end %>
+
+            <% link_to channels_path, :class => "awesome green buttons" do %>
+              <%= image_tag('icons/black/btn_tv.png', :title => 'All channels', :alt => "browse channels") %>
+              Browse channels
+            <% end %>
+
+            <% link_to player_path(:anchor => nil), :class => 'awesome blue buttons' do %>
+              <%= image_tag('icons/black/btn_play.png', :title => 'Your channel', :alt => "player") %>
+              Back to your channel
+            <% end %>
+
+            <%= link_to (image_tag('icons/black/btn_prefs.png', :title => 'Preferences') ), preferences_path, :class => 'buttons_medium_awesome grey' %>
+            <%= link_to (image_tag('icons/black/btn_logout.png', :title => 'Logout') ),  destroy_user_session_path, :class => 'buttons_medium_awesome red' %>
+
+          <% elsif user_signed_in? %>
+            <span id="user_name">
+              Hi, <%= current_user.email %>
+            </span>
+            <%= link_to "User pending", pending_user_path, :class=>"awesome orange" %>
+          <% else %>
+            <%= link_to 'Sign Up!', new_user_registration_path, :class => 'awesome orange' %>
+            <%= link_to 'Sign In', new_user_session_path, :class => 'awesome blue'%>
+
+          <% end %>
+
+
+        </div>
+      </div>
+
+      <div id='middle'>
+        <%= yield %>
+      </div>
+
+    </div>
+    <div id="fb-root">
+    </div>
+
+    <div id="notice_modal">
+
+    </div>
+
+    <script type="text/javascript" >
+      window.fbAsyncInit = function() {
+        FB.init({appId: '#{FB_APP_ID}', status: true, cookie: true,
+          xfbml: true});
+      };
+      (function() {
+        var e = document.createElement('script'); e.async = true;
+        e.src = document.location.protocol +
+          '//connect.facebook.net/en_US/all.js';
+        document.getElementById('fb-root').appendChild(e);
+      }());
+
+
+    </script>
+
+    <%= javascript_include_tag   'http://platform.twitter.com/widgets.js'  %>
+    <%= yield(:bottom_script) %>
+    <%= render 'layouts/google_analytics' %>
+  </body>
+</html>

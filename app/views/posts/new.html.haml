@@ -1,0 +1,25 @@
+#header.player
+  = image_tag('/images/player/logo.jpg')
+#post_popup
+  %h1
+    = "Tell your friends about '#{@video.title}'"
+  %p
+    = image_tag @video.thumb_url
+  = form_for @post, :remote => true do |f|
+    = f.hidden_field :video_id
+    .group
+      = f.label :message
+      = f.text_area :message
+    
+    .group(style='text-align:right;')
+      %div(class='fb_button fb_button_large')
+        = f.submit "Post on Facebook", :class => 'fb_button_text'
+      
+:javascript
+  $("new_post").observe("ajax:loading", function(event){
+    $('post_submit').value = 'Posting & closing popup...';
+    $('post_submit').disable();
+  });
+  $("new_post").observe("ajax:success", function(event){ 
+    window.close();
+  });

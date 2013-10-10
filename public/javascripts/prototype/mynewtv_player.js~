@@ -1,0 +1,1686 @@
+
+var MynewtvVideoList = Class.create({
+  initialize: function(arrayOfAttributes) {
+    this.className = 'MynewtvVideoList';
+    this._videos = new Hash;
+    this._playlistIds = [];
+    this._searchlistIds = [];
+    this.addToPlaylist(arrayOfAttributes);
+  },
+
+  ids: function (){
+    return this._playlistIds;
+  },
+
+  first: function(n) {
+    return this.videos().first();
+  },
+
+  last: function() {
+    return this.videos().last();
+  },
+
+  empty: function() {
+    if (this._videos) {
+      if (!this._videos.size() > 0) {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  get: function(videoId) {
+    return this._videos.get(videoId);
+  },
+
+  addToSearchlist: function(arrayOfAttributes) {
+    arrayOfAttributes.each(function(attributes){
+      var v = new MynewtvVideo(attributes);
+      // make sure we're not ahdding a dupe!
+      if (!this._searchlistIds.include(v.id) && !this._playlistIds.include(v.id) ) {
+        if (!MynewtvVideo.currentVideo || MynewtvVideo.currentVideo.id != v.id) {
+          this._videos.set(v.id, v);
+          this._searchlistIds.push(v.id);
+        } else {
+          //log("same as current vid!");
+        }
+      }
+    }, this);
+  },
+
+  addOneVideo: function(attributes) {
+    var v = new MynewtvVideo(attributes);
+    // make sure we're not adding a dupe!
+    if (!this._playlistIds.include(v.id)) {
+      if (!MynewtvVideo.currentVideo || MynewtvVideo.currentVideo.id != v.id) {
+        this._videos.set(v.id, v);
+        var clonedIds = this._playlistIds.clone();
+        this._playlistIds=[];
+        this._playlistIds.push(v.id);
+
+        clonedIds.each (function(element) {
+          this._playlistIds.push(element);
+        }, this);
+
+      } else {
+        //log("same as current vid!");
+      }
+    }
+  },
+
+  addToPlaylist: function(arrayOfAttributes) {
+    arrayOfAttributes.each(function(attributes){
+      var v = new MynewtvVideo(attributes);
+      // make sure we're not adding a dupe!
+      if (!this._playlistIds.include(v.id)) {
+        if (!MynewtvVideo.currentVideo || MynewtvVideo.currentVideo.id != v.id) {
+          this._videos.set(v.id, v);
+          this._playlistIds.push(v.id);
+        } else {
+          //log("same as current vid!");
+        }
+      }
+    }, this);
+  },
+
+  clearSearchList: function () {
+    for (var i = 0; i < this._playlistIds.length; i++) {
+      video = this._videos.get(this._playlistIds[i]);
+      //console.log("id= "+ video.id);
+    }
+    this._searchlistIds = [];
+  },
+
+
+  unset: function(videoId) {
+    this._playlistIds = this._playlistIds.reject(function(id){
+      return id == videoId;
+    });
+    this._searchlistIds = this._searchlistIds.reject(function(id){
+      return id == videoId;
+    });
+    return this._videos.unset(videoId);
+  },
+
+  unshift: function(video) {
+    this._playlistIds.unshift(video.id);
+    this._videos.set(video.id, video);
+  },
+
+  _each: function(iterator) {
+    var i;
+    var length = this._searchlistIds.length;
+    for ( i=0; i < length; i++) {
+      var id = this._searchlistIds[i];
+      var vid = this._videos.get(id);
+      iterator(vid);
+    }
+
+    var length = this._playlistIds.length;
+    for ( i=0; i < length; i++) {
+      var id = this._playlistIds[i];
+      var vid = this._videos.get(id);
+      iterator(vid);
+    }
+
+  },
+
+  videosPlayList: function() {
+    return this._playlistIds.collect(function(id){
+      return this._videos.get(id);
+    },this);
+  },
+
+  videosSearchList: function() {
+    return this._searchlistIds.collect(function(id){
+      return this._videos.get(id);
+    },this);
+  },
+
+  videos: function() {
+    var videos = [];
+    var index = 0;
+
+    this._searchlistIds.each(function(id){
+      videos [index] = this._videos.get(id);
+      index++;
+    },this);
+
+    this._playlistIds.each(function(id){
+      videos [index] = this._videos.get(id);
+      index++;
+    },this);
+
+
+
+    return videos;
+  },
+
+  playlistSize: function () {
+    return this._playlistIds.size();
+  }
+
+});
+Object.extend(MynewtvVideoList.prototype, Enumerable);
+
+var MynewtvVideo = Class.create({
+  initialize: function(attributes) {
+    this.id          = "";
+    this.youtube_id  = "";
+    this.title       = "";
+    this.keywords    = "";
+    this.views       = 0;
+    this.rating      = 0;
+    this.favorites   = 0;
+    this.scores      = {};
+
+    this.from     = "";
+
+    this.more = "";
+
+    this.phrases_score = 0.0;
+    this.score         = 0.0;
+
+
+    $H(attributes).each(function(pair) {
+      this[pair.key] = pair.value;
+    }, this);
+
+  },
+
+  linkToPlay: function() {
+    var _function = "Mynewtv.cueAlternateVideoId("+this.id+");return false;"
+    return _function;
+  },
+
+  linkToSkipVideo: function () {
+    var _function = "Mynewtv.skipVideo("+this.id+");$('li_"+this.id+"').remove();return false;";
+    return _function; //escape(_function);
+  },
+
+  setThumb: function (img) {
+    this.thumb_url=img;
+  },
+
+  linkToThumb: function() {
+    var click = linkToPlay();
+    var thumb = this.thumbnailImg();
+    var a = new Element('a', {
+      'href':'#',
+      'onClick': click
+    }).update(thumb);
+    return a;
+  },
+
+  titleP: function() {
+    return "<p class='title'>"+ this.title +"</p>";
+    //return new Element('p', {'class': 'title'}).update(this.title);
+  },
+
+  authorP: function() {
+    return "<p class='author'>By: "+ this.author +"</p>";
+    //return new Element('p', {'class': 'author'}).update("By: "+this.author);
+  },
+
+  thumbnailImg: function() {
+    //  var img = new Element('img', {'src': this.thumb_url, 'width':'106', 'height':'89'});
+    var img = "<img id='img_v"+this.id+"' src='"+ this.thumb_url+"' width='106' heigh='89' onerror='imgError(this);'/>";
+    return img;
+  },
+
+
+  friendImg: function() {
+    var img = "<img title='"+ this.more.friend_username +"' src='"+ this.more.friend_pic_url+"' width='50' heigh='50'/>";
+    return img;
+  },
+
+
+  youtubeUrl: function() {
+    return "http://youtube.com/watch?v="+this.youtube_id;
+  },
+
+  mynewtvUrl: function() {
+    if (Mynewtv.userId) {
+      return "http://mynew.tv/v/" + this.id +"?user_id=" + Mynewtv.userId;
+    }
+  else if (this.more && this.more.user_id) {
+    return "http://mynew.tv/v/" + this.id +"?user_id=" + this.more.user_id;
+  }
+else
+  {
+    return "http://mynew.tv/v/" + this.id;
+  }
+},
+
+durationHumanized: function(duration) {
+  var hours   = Math.floor(duration/3600);
+  var minutes = Math.floor((duration - (hours*3600))/60);
+  var seconds = duration - (hours*3600) - (minutes*60);
+
+  hours   = this.doubleDigits(hours);
+  minutes = this.doubleDigits(minutes);
+  seconds = this.doubleDigits(seconds);
+
+  if (hours != "00") {
+    return hours+":"+minutes+":"+seconds;
+  } else {
+    return minutes+":"+seconds;
+  }
+},
+
+doubleDigits: function(x) {
+  if (x==0) {
+    return "00";
+  } else if (x < 10) {
+    return "0"+x;
+  } else {
+    return x;
+  }
+},
+
+setPageFields: function() {
+  this.setTitle();
+  this.setKeywords();
+  this.setCategory();
+  this.setDuration();
+  this.setYTLink();
+  this.setExplanation();
+  this.setQuery();
+  this.setPostForm();
+  this.addDebugTable();
+  this.addDebugPhraseScores();
+},
+
+setYTLink: function() {
+  var a = new Element('a', {
+    'href': this.youtubeUrl(),
+    'target':'new'
+  });
+  a.update('Watch it on YouTube');
+  this.setField('youtube_link', a);
+},
+
+setPostForm: function() {
+  if ($('post_form')) {
+    this.setPostFormVideoId();
+    $('post_form_message').update('Share this video on Facebook!');
+    $('post_submit').enable();
+    $('post_message').value="Check this out!";
+    $('new_post').show();
+  }
+},
+
+setPostFormVideoId: function() {
+  if ($('post_video_id')) {
+    $('post_video_id').value = this.id;
+  }
+},
+
+setTitle: function() {
+  this.setField('title', this.title);
+},
+
+setKeywords: function() {
+  this.setField('keywords', 'Keywords: '+this.keywords);
+},
+
+setCategory: function() {
+  this.setField('category', 'Category: '+this.categories);
+},
+
+setDescription: function() {
+  this.setField('description', 'Description: '+this.keywords);
+},
+
+setDuration: function(currentTime, totalTime) {
+  currentTime = typeof(currentTime) != 'undefined' ? currentTime : 0;
+  var current = this.durationHumanized(currentTime);
+
+
+  var total   = this.durationHumanized(this.duration);
+  this.setField('duration', current+" / "+total);
+},
+
+setExplanation: function() {
+  this.setField('explanation', '<b>'+this.title + '</b><br/>score= '+ this.score + '<br/>category_score= ' + this.category_score + '('+this.categories+ ') <br/>rating_score= ' + this.rating_score + '<br/>views_score= ' + this.rating_score + '<br/>avg_phrase_score= ' + this.phrases_score + ' <br/> tags <div id="tags">'+ this.words_debug + '</div>');
+
+},
+
+setQuery: function() {
+  queryWords = "";
+  if (this.queryWords != "undefined" || this.queryWords != null) {
+    this.queryWords.each (function(phrase) {
+      queryWords += phrase.text;
+    });
+  }
+  this.setField('query', queryWords);
+
+},
+
+setField: function(fieldName, value) {
+  var elem = $(fieldName);
+  if (elem) {
+    elem.update(value);
+  }
+},
+
+addDebugTable: function() {
+  var tbody  = $('debug_table_rows');
+
+  if (tbody) {
+    // clear it
+    tbody.update();
+    this.debugTableRows().each(function(row){
+      tbody.insert(row);
+    });
+  }
+},
+
+debugTableRows: function() {
+  if (this.debug_result_rows) {
+
+    trs = this.debug_result_rows.collect(function(row){
+      tr = new Element('tr');
+      [ //new Element('td').update(row.ferret_rank),
+        new Element('td').update(row.title),
+        new Element('td').update("<a href='"+row.youtube+"' target='_target'>link</a>" ),
+        new Element('td').update(row.score),
+        new Element('td').update(row.views_score + " (" + row.views_score_c + ")" ),
+        new Element('td').update(row.rating_score + " (" + row.rating_score_c + ")" ),
+        new Element('td').update(row.category_score + " (" + row.category_score_c + ") - " + row.category ),
+        new Element('td').update(row.phrases_score  + " (" + row.phrases_score_c + ")" ),
+        new Element('td').update("<div id='tags'>" + row.tags + "</div>")
+      ].each(function(td){
+        tr.insert(td);
+      });
+      return tr;
+    });
+    return trs;
+  } else {
+    return [];
+  }
+},
+
+addDebugPhraseScores: function() {
+  var parent = $('phrase_scores_searched');
+  if (parent && this && this.phrase_scores_searched) {
+    parent.update('');
+    var elems = [];
+    var phrase_score;
+    this.phrase_scores_searched.each(function(phrase_score) {
+      elems.push(this.debugPhraseScore(phrase_score));
+    }.bind(this));
+    elems.each(function(el) {
+      parent.insert(el);
+    });
+  }
+},
+
+debugPhraseScore: function(phrase_score) {
+  var div = new Element('div', {
+    id: "phrase_score_"+phrase_score.phrase_id
+  });
+
+  var toggle_link = new Element('a', {
+    'href':'#',
+    'onclick':'$("phrase_score_hits_'+phrase_score.phrase_id+'").toggle();return false;'
+  });
+  var count = phrase_score.top_hits.size();
+  toggle_link.update(count+" top hits");
+  div.insert(toggle_link);
+  // if (phrase_score.top_hits.size() > 0) {
+    //   div.insert("&nbsp;&nbsp;&nbsp;("+phrase_score.top_hits.first().score+" highest)");
+  // }
+  div.insert("&nbsp;&nbsp;&nbsp; "+ phrase_score.label   );
+
+
+  var table = new Element('table', {
+    'id': "phrase_score_hits_"+phrase_score.phrase_id,
+    'class':'phrase_score_hits'
+  });
+  var tbody = new Element('tbody');
+
+  var thead = "<thead><th>Score</th><th>Title</th><th>Category</th><th>Tags</th></thead>";
+
+  phrase_score.top_hits.each(function(hit) {
+    var row = new Element('tr');
+    var score = new Element('td', {
+      'class': 'score'
+    }).update(hit.score);
+    var category = new Element('td', {
+      'class': 'score'
+    }).update(hit.category);
+    var title = new Element('td', {
+      'class': 'title'
+    }).update(hit.title);
+    var words = new Element('td', {
+      'class': 'phrases'
+    }).update(hit.keywords.join("<br/>"));
+    row.insert(score);
+    row.insert(title);
+    row.insert(category);
+    row.insert(words);
+    tbody.insert(row);
+  });
+  table.update(thead);
+  table.insert(tbody);
+  table.hide();
+  div.insert(table);
+  return div;
+},
+
+inspect: function() {
+  return '#<MynewtvVideo:{id:'+this.id+', title: '+this.title+'}>';
+}
+});
+
+var MynewtvPlayerController = Class.create({
+
+initialize: function() {
+  this.playerId = 'ytplayer';
+  // this.embedPlayer('http://www.youtube.com/apiplayer?enablejsapi=1&version=3&playerapiid='+this.playerId);
+  this.initPlayer(true);
+  this.initController();
+  this.player = null;
+  this.videos = null;
+  this.currentVideo = null;
+  this.requestNum = 0;
+
+  this.userSignedIn = true;
+  this.userId = null;
+
+  this.publish_facebook = false;
+  this.publish_twitter = false;
+
+  this.requestingTopVideo = false;
+  this.requesting = false;
+  this.requestingId = null;
+  this.requestsPending = [];
+  this.searching = null;
+  this.lastRatingAction = '';
+  this.lastRatingId = '';
+  this.lastCheckIntervalTimeoutId = null;
+  this.last_video_search = null;
+},
+
+
+
+initPlayer: function(onLoad) {
+
+  detectScreenSize();
+  var width_and_height = getPlayerSize();  
+
+  controller = this;
+  jwplayer('mynewtv_player').setup({
+    'flashplayer': '/jwplayer/player.swf',
+    'id': 'ytplayer',
+    'autostart': 'true',
+    'allowScriptAccess': "always",
+    'allowFullScreen': 'true',
+    'screencolor': "#000000",
+    'width': width_and_height[0],//'640',
+    'wmode': "opaque",
+    'height': width_and_height[1], //'480',
+    'image': '/images/layout/logo.png',
+    'controlbar': 'bottom',
+    'logo.file': '/images/layout/logo_square.jpg',
+    'skin': "/jwplayer/dangdang.swf",
+    events: {
+      onComplete: function() {
+        Mynewtv.cueNextVideo(true);
+      },
+      onError: onPlayerError,
+      onReady: function () {
+        //console.log("jwplayer = " + jwplayer().getState() );
+        controller.player = jwplayer('mynewtv_player');
+        if (onLoad == true) {
+          onPlayerReady();
+        }
+      else
+        {
+          var newVideo = {
+            file: Mynewtv.currentVideo.youtubeUrl(),
+            image: '/images/layout/logo.png',
+            title: Mynewtv.currentVideo.title
+          };
+          controller.load(newVideo);
+        }
+
+      },
+      onTime: function (callback) {
+        controller.updatePlayerInfo(callback);
+      }
+    }
+  });
+
+
+
+},
+
+initController: function () {
+  setTimeout("setInterval('Mynewtv.requestMoreVideos(1)',60000)", 20000);
+},
+
+isRequesting: function() {
+  return this.requesting ;
+},
+
+requestingOn: function () {
+  this.requesting = true;
+  this.requestId = setTimeout("Mynewtv.requestingOff(1)", 90000);
+},
+
+requestingOff: function (num) {
+  this.requesting = false;
+},
+
+abortRequesting: function () {
+  clearTimeout(this.requestingId);
+},
+
+isPlayerReady: function () {
+  if ($('ytplayer') != null) {
+    return true;
+  }
+  return false;
+},
+
+getPlayer: function () {
+  controller = this;
+
+  try {
+    controller.player.getState();
+    if (controller.player.getState() == null) {
+      controller.reInitPlayer();
+    }
+  }
+  catch (e) {
+    controller.reInitPlayer();
+  }
+
+  return controller.player;
+},
+
+reInitPlayer: function () {
+  if ($('ytplayer') != null) {
+    $('ytplayer').remove();
+  }
+  $('player_wrapper').insert("<div id='mynewtv_player' > </div>");
+  controller.initPlayer(false);
+  this.cueVideo(Mynewtv.currentvideo, false);
+},
+
+
+resizePlayer: function () {
+        var width_and_height = getPlayerSize();
+        this.getPlayer().resize(width_and_height[0], width_and_height[1]);
+},
+
+updatePlayerInfo: function(callback) {
+  try {
+    if (this.currentVideo) {
+      this.currentVideo.setDuration(Math.floor(callback.position), Math.floor(callback.duration));
+    }
+  }
+  catch (e) {
+
+  }
+  /* try {
+    if (this.currentVideo) {
+      this.currentVideo.setDuration(Math.floor(Mynewtv.getPlayer().getCurrentTime()));
+    }
+  }
+  catch (e) {
+
+  } */
+},
+
+playOrPause: function() {
+  var state = this.getPlayer().getState();
+  // states from: http://code.google.com/apis/youtube/js_api_reference.html#Playback_controls
+  // unstarted (-1), ended (0), playing (1), paused (2), buffering (3), video cued (5)
+  if (state != "PAUSE") {
+    this.getPlayer().pause();
+    //pauseEffect();
+
+  } else {
+    this.getPlayer().play();
+    //playEffect();
+  }
+},
+
+
+cueNextVideo: function(toRate) {
+  //console.log ("[CueNextVideo]Video : " + Mynewtv.videos.size());
+
+  if (Mynewtv.videos.size() > 0 ) {
+    this.cueVideo(this.videos.first(), toRate);
+    this.requestMoreVideos(1);
+    return true;
+  }
+else
+  {
+    this.requestMoreVideos(1);
+    return false;
+  }
+
+},
+
+cueAlternateVideoId: function(videoId) {
+  this.skipCurrentVideoWithoutCueNext();
+  var video = this.videos.get(videoId);
+  this.cueVideo(video, false);
+  hideAudioRecorder();
+  //if the video is an item of the playlist
+    if (!video.from == "search") {
+      this.requestMoreVideos(1);
+    }
+  },
+
+  cueExternal: function (id) {
+    var videoAsJson = MynewtvEvents.videos().get(id);
+    if(videoAsJson == null) {
+      //console.log("Something goes wrong... an external Cue have id null");
+      return;
+    }
+    if(this.currentVideo != null && this.currentVideo.id != videoAsJson.id) {
+      this.skipCurrentVideoWithoutCueNext();
+      Mynewtv.videos.addOneVideo(videoAsJson);
+      Mynewtv.cueVideo(Mynewtv.videos.get(videoAsJson.id), false);
+      hideAudioRecorder();
+      Mynewtv.videos.each(function (item) {
+        if (item.id  == videoAsJson.id) {
+          Mynewtv.videos.unset(item.id);
+          Mynewtv.addVideoThumbs();
+        }
+      });
+
+    }
+  else
+    {
+      //console.log("same video");
+    }
+  },
+
+  enqueueExternal: function (id) {
+    var videoAsJson = MynewtvEvents.videos().get(id);
+    if(this.currentVideo.id != videoAsJson.id) {
+      Mynewtv.videos.addOneVideo(videoAsJson);
+      Mynewtv.addVideoThumbs();
+    }
+  else
+    {
+      //console.log("same video");
+    }
+  },
+
+
+  cueVideo: function(video, toRate) {
+
+    if (this.userSignedIn && toRate ) {
+      this.watchedCurrentVideo();
+    }
+    this.currentVideo = Mynewtv.videos.unset(video.id);
+    var newVideo = { 
+      file: video.youtubeUrl(),
+      image: '/images/layout/logo.png',
+      title: video.title
+    };
+    Mynewtv.getPlayer().load(newVideo);
+
+    playEffect();
+/*
+    if (this.currentVideo.from == 'post' && !this.userSignedIn) {
+      replaceDataForTwitterButton(this.currentVideo.title, this.currentVideo.mynewtvUrl() );
+      this.currentVideo.setPageFields();
+      return;
+    }
+
+    $("btn_mtv_like").src="/images/player/btn_smile_light.png";
+    $("btn_mtv_hate").src="/images/player/btn_angry_light.png";
+
+    //console.log ("CueVideo from "+ this.currentVideo.from);
+
+    if (this.currentVideo.from == 'facebook') {
+      $$(".fb_hidden").each (function(element) {
+        element.value="";
+      });
+
+      $("fb_friend_pic").src =this.currentVideo.more.friend_pic_url ;
+      $("fb_friend_pic").title= this.currentVideo.more.friend_username ;
+      var friend_name = this.currentVideo.more.friend_username;
+      $("fb_friend_name").value= friend_name ;
+      $("fb_friend_id").value= this.currentVideo.more.friend_id ;
+      $("mynewtv_id").value= this.currentVideo.more.mynewtv_id ;
+
+      $$(".friend_name").each (function(element) {
+        element.update(friend_name);
+      });
+
+      $("fb_post_id").value= this.currentVideo.more.post_id ;
+      checkLikes();
+
+      $("fb_rec_box").show();
+
+      if (this.currentVideo.more.mynewtv_id == null  ) {
+        $('unfollow_fb').hide();
+        $('follow_fb').hide();
+        $('channel_or_invite').writeAttribute("target", "no_channel" );
+        $("no_channel").show();
+      }
+    else
+      {
+        $('channel_or_invite').writeAttribute("target","channel") ;
+        $$('go_to_channel').each (function(element) {
+          element.value= "/channels/" + this.currentVideo.more.mynewtv_id ;
+        });
+
+        $("fb_mynewtv_user").update(this.currentVideo.more.friend_username);
+
+        following = this.currentVideo.more.following;
+        //console.log("You are following this Fb Friend? " + following);
+        if (following == true) {
+          $('unfollow_fb').show();
+          $('follow_fb').hide();
+          $("status_follow").update("You are following ");
+        }
+      else
+        {
+          $('follow_fb').show();
+          $('unfollow_fb').hide();
+          $("status_follow").update("You not are following ");
+        }
+
+      }
+    }
+  else
+    {
+      $("fb_rec_box").hide();
+      $("fb_post_id").value= "";
+      $("mynewtv_id").value= "";
+
+    }
+
+    this.currentVideo.setPageFields();
+    this.addVideoThumbs();
+    replaceDataForTwitterButton(this.currentVideo.title, this.currentVideo.mynewtvUrl() );
+    clearTimeout(this.lastCheckIntervalTimeoutId);
+    this.lastCheckIntervalTimeoutId = setTimeout("Mynewtv.checkIfPlaying()", 15000);
+    retrieveAudioComments(video.id, Mynewtv.userId);
+
+  },
+
+  checkIfPlaying: function () {
+    if (this.getPlayer().getPosition() == 0 && this.getPlayer().getState() == 'BUFFERING') {
+      //console.log("Delaying too much");
+      onPlayerError();
+    }
+
+  },
+
+  favoriteCurrentVideo: function () {
+    var video_id = this.currentVideo.id;
+
+    var favoriteVideoPath = '/users/'+userId+'/favourites/';
+    new Ajax.Request(favoriteVideoPath,
+    {
+      parameters: {
+        id: video_id
+      },
+      method:'post',
+      onSuccess: function(transport){
+        //  var response = transport.responseText || "no response text";
+        //  var array = transport.responseJSON;
+
+      }
+    });
+  },
+
+  bookmarkCurrentVideo: function () {
+    var video_id = this.currentVideo.id;
+
+    var favoriteVideoPath = '/users/'+userId+'/bookmarks/';
+    new Ajax.Request(favoriteVideoPath,
+    {
+      parameters: {
+        id: video_id
+      },
+      method:'post',
+      onSuccess: function(transport){
+        //  var response = transport.responseText || "no response text";
+        //  var array = transport.responseJSON;
+
+      }
+    });
+  },
+
+
+  deactivateVideo: function () {
+    new Ajax.Request('/videos/'+this.currentVideo.id,
+    {
+      method:'delete',
+      parameters: {
+        video_id: this.currentVideo.id
+      }
+    });
+
+  },
+
+  shareOnFacebook:function()   {
+    FB.ui(
+    {
+      method: 'feed',
+      display: 'popup',
+      name: this.currentVideo.title,
+      link: this.currentVideo.mynewtvUrl(),
+      picture: this.currentVideo.thumb_url,
+      caption: 'http://MyNew.TV',
+      description: this.currentVideo.description,
+      message: 'Check this out!'
+    },
+    function(response) {
+      if (response && response.post_id) {
+
+      } else {
+        //alert('Post was not published.');
+      }
+    }
+    );
+  },
+
+  publishAllLikedOnFacebook: function (event) {
+    var publish = $("publish_fb").readAttribute("publish");
+    if (publish  == "true") {
+      $("publish_fb").src="/images/icons/light/btn_facebook.png";
+      //  $("publish_fb").height=25;$("publish_fb").width=25;
+      $("publish_fb").writeAttribute("publish", "false");
+    }
+  else
+    {
+      $("publish_fb").src="/images/icons/btn_facebook_color.png";
+      // $("publish_fb").height=32;$("publish_fb").width=32;
+      $("publish_fb").writeAttribute("publish", "true");
+    }
+
+    new Ajax.Request('/user/publish_fb',
+    {
+      method:'post'
+    });
+  },
+
+  publishAllLikedOnTwitter: function (event) {
+    new Ajax.Request('/user/publish_tw',
+    {
+      method:'post' ,
+      onSuccess: function (transport) {
+        refreshPublishTw();
+      }
+    });
+  },
+
+  requestInitialVideos: function(num) {
+    var initialVideosPath = '/playlist/';
+    new Ajax.Request(initialVideosPath,
+    {
+      method:'get',
+      onSuccess: function(transport){
+        var response = transport.responseText || "no response text";
+        var array = transport.responseJSON;
+        Mynewtv.videos = new MynewtvVideoList(array);
+
+        if (Mynewtv.videos.size() < 6) {
+          var total = 6 - Mynewtv.videos.size();
+          for(var i=1;i<=total;i++) {
+            Mynewtv.requestsPending.push(1);
+          }
+        }
+        Mynewtv.cueNextVideo(false);
+      },
+      onFailure: function(){  }
+    });
+
+  },
+
+  querySearchVideos: function(query) {
+    if (Mynewtv.videos != null) {
+      Mynewtv.videos.clearSearchList();
+    }
+
+    if (query == "") {
+      return;
+    }
+
+    if (this.searching != null) {
+      this.searching.abort();
+    }
+
+    this.searchVideos(query, 1);
+    $("search_field").value="";
+
+  },
+
+  searchVideos: function(words, count) {
+    var searchVideosPath = '/videos/search';
+
+    this.searching = new Ajax.Request(searchVideosPath,
+    {
+      method:'get',
+      parameters: {
+        query: words,
+        count: count
+      },
+      onSuccess: function(transport){
+        var response = transport.responseText || "no response text";
+        //console.log ("response="+response);
+        if (response == 'false') {
+          $('loader').setStyle({
+            visibility: 'hidden'
+          });
+          $('btn_search').removeClassName('searching');
+
+          throw $break;
+        }
+      else
+        {
+
+          var array = transport.responseJSON;
+          Mynewtv.videos.addToSearchlist(array);
+          Mynewtv.addVideoThumbs();
+          count+=1;
+          //Agregar más a la cola
+          if (count < 6) {
+            Mynewtv.searchVideos(words, count);
+            //console.log("Search another...");
+          }
+        else
+          {
+            $('loader').setStyle({
+              visibility: 'hidden'
+            });
+            $('btn_search').removeClassName('searching');
+          }
+        }
+
+
+      },
+      onLoading: function () {
+        $('loader').setStyle({
+          visibility: 'visible'
+        });
+        $('btn_search').addClassName('searching');
+
+      },
+      onFailure: function(){
+        $('loader').setStyle({
+          visibility: 'hidden'
+        });
+        $('btn_search').removeClassName('searching');
+      }
+    });
+
+  },
+
+  querySearchDebugVideos: function(words) {
+    var searchVideosPath = '/search';
+    if (words == "")
+      return;
+
+      new Ajax.Request(searchVideosPath,
+      {
+        method:'get',
+        parameters: {
+          query: words,
+          debug: true
+        },
+        onSuccess: function(transport){
+          var response = transport.responseText || "no response text";
+          var search_debug = transport.responseJSON;
+
+          buildDebugPage (search_debug);
+
+          $('loader').setStyle({
+            visibility: 'hidden'
+          });
+
+
+        },
+        onLoading: function () {
+          $('loader').setStyle({
+            visibility: 'visible'
+          });
+
+        },
+        onFailure: function(){
+          $('loader').setStyle({
+            visibility: 'hidden'
+          });
+
+          alert ("Something goes wrong! Try again or refresh and try again")
+        }
+      });
+    },
+
+
+    requestMoreVideos: function(num) {
+      this.requestsPending.push(num);
+      //console.log("[requestMoreVideos] " + num);
+      if (Mynewtv.videos.playlistSize() < 6) {
+        if (!this.isRequesting() ) {
+          this.fetchMoreVideos();
+        }
+      }
+    else
+      {
+        Mynewtv.addVideoThumbs();
+      }
+    },
+
+    fetchMoreVideos: function() {
+      this.requestingOn();
+      //console.log("[fetchMoreVideos]")
+      var num = this.requestsPending.shift();
+      var moreVideosPath = '/video_search/';
+      var arrayIds = Mynewtv.videos.ids().toArray();
+      arrayIds.push(Mynewtv.currentVideo.id);
+      _ids = arrayIds.inspect();
+      //console.log("ids= "+ _ids);
+      this.last_video_search = new Ajax.Request(moreVideosPath,
+      {
+        method:'post',
+        parameters: {
+          ids : _ids
+        },
+        onSuccess: function(transport){
+          Mynewtv.requestingOff();
+          var response = transport.responseText || "no response text";
+          var array = transport.responseJSON;
+          Mynewtv.videos.addToPlaylist(array);
+          /*if (this.currentVideo.id == '') {
+            this.cueNextVideo();
+          }*/
+
+          Mynewtv.addVideoThumbs();
+
+          if (Mynewtv.requestsPending.size() > 0) {
+            Mynewtv.fetchMoreVideos();
+
+          }
+        },
+        onFailure: function(){
+          //console.log("Fail in fetchMoreVideos");
+          Mynewtv.fetchMoreVideos();
+        }
+      });
+    },
+
+    /* Unused */
+    requestPostVideo: function(videoId) {
+      var path = '/v/'+videoId;
+      new Ajax.Request(path,
+      {
+        method: 'get',
+        onSuccess: function(transport) {
+          var array = transport.responseJSON;
+          if (!array) {
+            // having weirdness w/ json response sometimes.
+            array = transport.responseText.evalJSON();
+          }
+          Mynewtv.videos = new MynewtvVideoList(array);
+          Mynewtv.cueNextVideo();
+        },
+        onFailure: function() {}
+      });
+
+
+    },
+
+    cueJsonVideo: function (array) {
+      Mynewtv.videos = new MynewtvVideoList(array);
+      Mynewtv.cueNextVideo();
+    },
+
+    postAboutCurrentVideo: function(form) {
+      $('post_submit').disable();
+      var method = form.method;
+      new Ajax.Request(form.action,
+      {
+        method: method,
+        parameters: form.serialize(true),
+        onSuccess: function(transport) {
+          $('new_post').hide();
+          $('post_form_message').update("This video has been posted to Facebook!");
+        },
+        onFailure: function() {}
+      });
+    },
+
+    addVideoThumbs: function() {
+
+      var playlist = $('video_thumbs');
+      playlist.update('');
+      Mynewtv.videos.each(function(video, index){
+        if (index == 5) {
+          throw $break
+        };
+        //console.log ("source = "+ video.from);
+        var img    = video.thumbnailImg();
+        var title  = video.titleP();
+        var author = video.authorP();
+
+        if (video.from == 'facebook') {
+          var right = "<div class='float right'><p class='legend'>&nbsp;&nbsp;Liked:</p>"+
+          "<a  href='#' title='"+video.more.friend_username+"' id='facebook"+index+"' class='' onclick='return false;' >"+ video.friendImg() + "</a></div>";
+        }
+      else if (video.from == 'search') {
+        var right = "<div class='float right'><p class='legend'>&nbsp;&nbsp;Search</p><img title='Search' src='images/icons/dark/btn_lupa.png' height='50' width='50'></div>";
+      }
+    else if (video.from == 'like') {
+      var right = "<div class='float right'><p class='legend'>&nbsp;&nbsp;Liked</p><img title='"+video.more.from_name+"' src='images/player/btn_smile_light.png' height='50' width='50'></div>";
+    }
+  else
+    {
+      var right = "<div class='float right'><p class='legend'>&nbsp;&nbsp;MyNew.TV</p><img title='MyNew.TV' src='images/layout/logo_square_transparent.png' height='50' width='50'></div>";
+    }
+
+    var li = new Element('li',{
+      'id': 'li_'+video.id
+    });
+
+    var divs ="<div class='float left' onclick="+video.linkToPlay()+" >" + img + " </div>" +
+    "<div class='float middle' onclick="+video.linkToPlay()+" >" + title + author + "</div>" +
+    right + "<div style='float: right; width: 12px; height: 12px; position: absolute; margin-left: 385px; margin-top: -5px;'><a  class='close' href='#' onclick="+video.linkToSkipVideo()+"> <img src='/images/icons/light/20/btn_cerrar.png' heigh='12' width='12'></a></div>";
+
+    li.update(divs);
+    playlist.insert(li);
+  });
+
+},
+
+
+watchedCurrentVideo: function() {
+  this.rateCurrentVideo('watched');
+},
+
+likeCurrentVideo: function() {
+  //log('liking: this',this);
+  //log('liking: publish_facebook',this.publish_facebook);
+  //log('liking: publish_twitter',this.publish_twitter);
+  if (this.publish_facebook || this.publish_twitter) {
+    this.displayRatingMessage("You liked it! We'll publish it!");
+  } else {
+    this.displayRatingMessage('You liked it!');
+  }
+  if (this.currentVideo.from == "facebook") {
+    likePost();
+    showFbLikeTab();
+  }
+
+  this.rateCurrentVideo('liked');
+  $("btn_mtv_like").src="/images/player/btn_smile_dark.png";
+  pageTracker._trackPageview('/liked');
+},
+
+hateCurrentVideo: function() {
+  this.displayRatingMessage("OK, no good...Here's another video!");
+  this.rateCurrentVideo('hated');
+
+  this.cueNextVideo(false);
+  pageTracker._trackPageview('/hated');
+},
+
+skipCurrentVideo: function() {
+  this.displayRatingMessage("Next video!");
+  this.rateCurrentVideo('skipped');
+  this.cueNextVideo(false);
+  pageTracker._trackPageview('/skipped');
+},
+
+skipVideo: function(id) {
+  this.rateVideo('skipped',id);
+  this.videos.unset(id);
+  Mynewtv.requestMoreVideos(1);
+  pageTracker._trackPageview('/skipped');
+},
+
+skipCurrentVideoWithoutCueNext: function(id) {
+  this.rateCurrentVideo('skipped');
+  pageTracker._trackPageview('/skipped');
+},
+
+
+rateCurrentVideo: function(action) {
+  this.sendRate(action, this.currentVideo);
+},
+
+
+rateVideo: function(action, id) {
+  var video = this.videos.get(id);
+  this.sendRate(action, video);
+},
+
+sendRate: function (action, video) {
+  var path = '/ratings/';
+  var params = "rating[action]="+action +
+  "&rating[video_id]="+ video.id +
+  "&rating[video_score]="+ video.score +
+  "&rating[source]="+ video.from;
+  if (video.from == "facebook") {
+    params += "&rating[rec_id]="+video.more.id;
+  }
+
+  if (this.lastRatingId == video.id && this.lastRatingAction == action) {
+    return false;
+  }
+else
+  {
+    this.lastRatingId = video.id;
+    this.lastRatingAction = action;
+  }
+
+  new Ajax.Request(path,
+  {
+    method:     'post',
+    parameters: params,
+    onSuccess: function(transport) {
+      var response = transport.responseText || "no response text";
+      return true;
+    },
+    onFailure: function() {}
+  }
+  );
+},
+
+displayRatingMessage: function(message) {
+  var elem = $('rating_message');
+  elem.update(message);
+  elem.appear();
+  window.setTimeout(function() {
+    // $('rating_message').fade();
+    $('rating_message').update('&nbsp;');
+  }, 4000);
+},
+
+popupPostForm: function(video_id) {
+  var video_id = this.currentVideo.id;
+  var url = "";
+  if (location.port == "80") {
+    url = location.protocol+"//"+location.host+"/posts/new?video_id="+video_id;
+  } else {
+    url = location.protocol+"//"+location.host+"/posts/new?video_id="+video_id;
+  }
+
+  window.open(url, '','width=650,height=500,toolbar=no,location=no,menubar=no,scrollbars=no,resizable=yes');
+},
+
+});
+
+
+
+
+function onPlayerError(error) {
+
+//alert ("somethings go wrong with the player!")
+if (error != null) {
+  //alert("onPlayerError = " + error.message);
+}
+Mynewtv.deactivateVideo();
+Mynewtv.skipCurrentVideo();
+
+}
+
+function displayMessage (_message) {
+$$("#flashMessage span")[0].update = _message;
+$("flashMessage").toggle();
+Effect.Appear('flashMessage');
+}
+
+
+function buildDebugPage (data) {
+
+var gototable = $$("#goto_table tbody").first();
+gototable.update("");
+$$("#checkbox_right").first().update("");
+var loops = data.loops
+for (var loop = 0; loop < loops; loop++ ) {
+  var check = " <input type='checkbox' id='loop"+loop+"' checked='true'> ";
+  var check_loop = "<tr><td> Loop "+loop+check+" </td></tr>";
+  $$("#checkbox_right").first().insert({
+    bottom: check_loop
+  });
+  var anchor = "<tr><td><a href='#anchor"+loop+"'> Winner "+ loop + " </a></td></tr>"
+  gototable.insert({
+    bottom: anchor
+  });
+}
+
+$$(".checkboxes input").each(function (element) {
+  element.observe('click', showDisplayColumns  );
+});
+
+$$("#stopwords_table tbody tr td").first().update (data.stopwords);
+
+$$("#loserwords_table tbody tr td").first().update (data.loser_words);
+
+wordstable = $$("#words_table tbody").first();
+wordstable.update("");
+data.phrases.each (function (phrase, index) {
+  var row = "<tr><td>"+phrase.id+"</td><td>"+phrase.text+"</td>"+
+  "<td>"+phrase.videos_count+"</td><td>"+phrase.idf+"</td>"+
+  "<td>"+phrase.last_crawled_at+"</td></tr>";
+  wordstable.update (wordstable.innerHTML + row);
+});
+
+$("time_to_find_phrases").update(data.time_to_find_phrases + " ms");
+
+$("time_to_find_videos").update(data.time_to_find_videos + " ms");
+
+$("time_to_count_matches").update(data.time_to_count_matches + " ms");
+
+videostable = $$("#videos_table tbody").first();
+videostable.update("");
+
+var videostablerow = $$("#videos_table thead tr").first();
+$$(".temp").each (function (el) {
+  el.remove()
+});
+
+var columns = "";
+for (var loop = 0; loop < loops; loop++ ) {
+  columnsHead = "<th colspan='3' rowspan='1' class='loop"+loop+" temp' > "+
+  "<strong> Loop " +  loop + "</strong></th>";
+  videostablerow.insert({
+    bottom: columnsHead
+  });
+}
+
+var videostablehead = $$("#videos_table thead").first();
+videostablehead.insert({
+  bottom: "<tr> </tr>"
+});
+videostablerow = $$("#videos_table thead tr")[1];
+
+for (var loop = 0; loop < loops; loop++ ) {
+  columnsTitle = "<th  class='loop"+loop+" temp' rowspan='1'>Suppresed</th>"+
+  "<th class='loop"+loop+" temp' rowspan='1' >Rarity</th>"+
+  "<th  class='loop"+loop+" temp' rowspan='1'>TotalScore</th>";
+  videostablerow.insert({
+    bottom: columnsTitle
+  });
+}
+
+
+
+$H(data.top_videos).each (function (video) {
+  var row = "";
+  if (video.value.selected_for_loop != "-1") {
+    row="<tr><td><a name='anchor"+video.value.selected_for_loop+"' href='#top'>"+
+    "<strong>"+video.key+" ["+video.value.selected_for_loop+"]</strong></a></td>";
+  }
+else
+  {
+    row="<tr><td>"+video.key+"</td>";
+  }
+
+  row = row +
+  "<td class='0' >"+video.value.title+"</td>"+
+  "<td class='1' >"+video.value.keywords+"</td>"+
+  "<td class='2' >"+video.value.description+"</td>"+
+
+  "<td class='3' caption='relevance'>"+video.value.relevance+"</td>"+
+  "<td class='4' caption='rating'>"+video.value.rating_score+"</td>"+
+  "<td class='5' caption='views'>"+video.value.views_score+"</td>"+
+  "<td class='6' caption='user_score' style='color: blue'>"+video.value.user_score+"</td>";
+
+  for (var loop = 0; loop < loops; loop++ ) {
+    var suppressed = $H(video.value.suppressed_for_loop).values()[loop];
+    var rarity = $H(video.value.rarity_for_loop).values()[loop];
+    var total = $H(video.value.total_score_for_loop).values()[loop];
+    row = row + "<td class='loop"+loop+"' caption='suppressed' >"+suppressed+"</td>"+
+    "<td class='loop"+loop+"' caption='rarity'>"+rarity+"</td>"+
+    "<td class='loop"+loop+"' caption='total' style='color: red' >"+total+"</td>";
+  }
+
+  row = row + "</tr>";
+  videostable.insert ({
+    bottom: row
+  });
+
+});
+
+$("total_time").update(data.total_time + " ms");
+$("build_time").update(data.build_time + " ms");
+
+}
+
+
+function retrieveAudioComments(video_id, user_id) {
+
+new Ajax.Request("/audio_comments",
+{
+  method:'get',
+  parameters: {
+    user_id : user_id,
+    video_id : video_id
+  },
+  onSuccess: function(transport){
+    var response = transport.responseText || "no response text";
+    var audio_comments = transport.responseJSON;
+    ul_audios = $("results_audios");
+    ul_audios.update();
+    //console.log("Audio comments: " + audio_comments);
+    if (audio_comments.length > 0 ) {
+      new Effect.Pulsate('audios_mark', {
+        pulses: 8,
+        duration: 4.0
+      })
+      audio_comments.each(function(audio) {
+        var player_id = "player_" + audio.id;
+        var li = createPlayerBox(audio, player_id);
+        ul_audios.insert ({
+          bottom: li
+        });
+        if (audio.action == 'hated') {
+          hatedAudio(audio.id);
+        }
+        if (audio.action == 'liked') {
+          likedAudio(audio.id);
+        }
+        createAudioPlayer(player_id, audio.location)
+
+      });
+    }
+  else
+    {
+      ul_audios.update("<div id='no_audios'>No audio comments</div>")
+    }
+
+  },
+  onFailure: function(){
+  }
+});
+
+}
+
+function createPlayerBox (audio, player_id){
+var li = "<li><div class='audio_comment_box' id='audio_box_"+audio.id+"'><div class='icons'>";
+li += "<a id='like_audio' href='#' title='I Like this' onclick='likeAudioComment("+audio.id+")'><img src='images/icons/thumbs_up_light.png' height='15' width='15'/></a>";
+li+="<a id='hate_audio' href='#' title='I Hate it' onclick='hateAudioComment("+audio.id+")'><img src='images/icons/thumbs_down_light.png' height='15' width='15'/></a>"
+if (audio.user_id == userId) {
+  li += "<a href='#' title='Remove' onclick='destroyAudiocomment("+audio.id+")'><img src='images/icons/trash_light.png' height='15' width='15'/></a>";
+}
+li += "</div>";
+li += "<p class='comment_title'>"+audio.title+"</p>"+
+"<p class='comment_from'> by: " + audio.from + "</p>"+
+"<div class='audio_player'><div id='" + player_id + "' class='rtmp_player' ></div></div>"+
+"<div class='comment_duration'>" + audio.duration + "</div>";
+if (audio.description) {
+  li += "<p class='comment_desc'>" + audio.description + "</p>";
+}
+
+li += "<div class='bottom_audio_box'><ul class='status_audio'><li><a id='likes' title='Likes' href='#' >"+
+"<img src='images/icons/thumbs_up.png' height='14' width='14'/><span id='likes_count'>"+audio.likes+"</span></a></li><li><a title='Hates' href='#' id='hates'>"+"<img src='images/icons/thumbs_down.png' height='14' width='14'/><span id='hates_count'>"+audio.hates+"</span></a></li><li><a href='#' id='listens' title='Listens'><img src='images/icons/play.png' height='14' width='14'/><span id='listens_count'>"+audio.listen_count+"</span></a></li></ul></div>";
+li += "</div></li>";
+
+return li;
+}
+
+function addAudioComment (audio_as_string) {
+var audio = audio_as_string.evalJSON();
+ul_audios = $("results_audios");
+if ( $('no_audios') != null) {
+  $('no_audios').remove();
+}
+var player_id = "player_" + audio.id;
+var li = createPlayerBox(audio, player_id);
+ul_audios.insert ({
+  top: li
+});
+createAudioPlayer(player_id, audio.location);
+var title = $$('#audio_box_' + audio.id + ' p.comment_title').first();
+new Effect.Pulsate(title,{
+  pulses: 4,
+  duration: 3.0
+});
+}
+
+function createAudioPlayer(element_id, location) {
+jwplayer(element_id).setup({
+  'flashplayer': '/jwplayer/player-non-viral.swf',
+  'id': 'play_'+element_id,
+  'allowScriptAccess': "always",
+  'controlbar': 'bottom',
+  'screencolor': "#000000",
+  'wmode':'opaque',
+  'width': '320',
+  'skin' : "/jwplayer/simple.zip",
+  'height': '20',
+  'class': 'flv_audio',
+  events: {
+    onComplete: function() {
+      // alert("onComplete");
+      //   jwplayer('audio_player_1').stop();
+      //  setTimeout("jwplayer('audio_player_1').stop()",500);
+    }
+  }
+});
+
+var audioComment = {
+  file: location,
+  streamer: RTMP_SERVER,//'rtmp://localhost/audiorecorder/_definst_',
+  provider: 'rtmp',
+  title: 'prueba'
+};
+jwplayer(element_id).load(audioComment);
+}
+
+
+function destroyAudiocomment(id) {
+
+new Ajax.Request("/audio_comments/destroy/"+id,
+{
+
+  method : 'post',
+  onSuccess: function(transport) {
+    $("audio_box_"+id).remove();
+  }
+});
+
+}
+
+
+function likeAudioComment(id) {
+
+new Ajax.Request("/audio_comments/like",
+{
+  method:'post',
+  parameters: {
+    audio_id : id
+  },
+  onLoading: function (transport) {
+    likedAudio(id);
+  },
+  onSuccess: function(transport) {
+    likedAudio(id);
+    var audio_comment = transport.responseJSON;
+    updateAudioRatings(audio_comment);
+  }
+});
+
+}
+
+function hateAudioComment(id) {
+
+new Ajax.Request("/audio_comments/hate",
+{
+  method:'post',
+  parameters: {
+    audio_id : id
+  },
+  onLoading: function (transport) {
+    hatedAudio(id);
+  },
+  onSuccess: function(transport) {
+    hatedAudio(id);
+    var audio_comment = transport.responseJSON;
+    updateAudioRatings(audio_comment);
+
+  }
+});
+
+}
+
+function updateAudioRatings(audio) {
+$$("#audio_box_"+audio.id +" #hates_count").first().update(audio.hates);
+$$("#audio_box_"+audio.id +" #likes_count").first().update(audio.likes);
+$$("#audio_box_"+audio.id +" #listens_count").first().update(audio.listen_count);
+}
+
+function hatedAudio(id) {
+$$("#audio_box_"+ id +" #like_audio img").first().src='images/icons/thumbs_up_light.png';
+$$("#audio_box_"+ id +" #like_audio").first().writeAttribute("onclick","likeAudioComment("+id+")");
+$$("#audio_box_"+ id +" #hate_audio img").first().src='images/icons/thumbs_down_red.png';
+$$("#audio_box_"+ id +" #hate_audio").first().writeAttribute("onclick","destroyAudioRating("+id+")");
+}
+
+
+function likedAudio(id) {
+$$("#audio_box_"+ id +" #like_audio img").first().src='images/icons/thumbs_up_green.png';
+$$("#audio_box_"+ id +" #like_audio").first().writeAttribute("onclick","destroyAudioRating("+id+")");
+$$("#audio_box_"+ id +" #hate_audio img").first().src='images/icons/thumbs_down_light.png';
+$$("#audio_box_"+ id +" #hate_audio").first().writeAttribute("onclick","hateAudioComment("+id+")");
+}
+
+function resetRatingActions(id) {
+$$("#audio_box_"+ id +" #like_audio img").first().src='images/icons/thumbs_up_light.png';
+$$("#audio_box_"+ id +" #like_audio").first().writeAttribute("onclick","likeAudioComment("+id+")");
+$$("#audio_box_"+ id +" #hate_audio img").first().src='images/icons/thumbs_down_light.png';
+$$("#audio_box_"+ id +" #hate_audio").first().writeAttribute("onclick","hateAudioComment("+id+")");
+}
+
+function destroyAudioRating (id) {
+
+new Ajax.Request("/audio_comments/destroy_rating/"+id,
+{
+  method: 'post',
+  onSuccess: function(transport) {
+    resetRatingActions(id);
+    var audio_comment = transport.responseJSON;
+    updateAudioRatings(audio_comment);
+  }
+});
+}
+
+
+
+function clearCreateAudioForm(){
+$("flv_form").reset();
+$("audio_location").value = null;
+$("audio_duration").value = null;
+}
+
+var audio_comment_to_add = null;
+function waitForAddAudioComment (audio) {
+audio_comment_to_add = audio;
+setTimeout("addAudioComment(audio_comment_to_add)", 1000) ;
+}
+

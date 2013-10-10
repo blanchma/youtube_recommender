@@ -1,0 +1,110 @@
+
+<script type='text/javascript'>
+
+  var userId = null;
+  var userName = null;
+  var userSlug = null;
+  var currentUserChannel = null;
+
+  var channelId = null;
+  var channelSlug = null;
+  var channelName = null;  
+  var currentChannel = null;
+  var playingPublicChannel = false;
+  var playingChannel = false;    
+
+  var owner = <%= @owner ? @owner : false %>;
+
+  var player = null;
+  var playerView = null;
+
+  var playlistController = null;
+  var playlistView = null;
+  var playlistModel = null;
+  var feedsController = null;
+  var flaresController = null;
+
+  var RTMP_SERVER = '<%= RTMP_SERVER %>';
+
+<% if user_signed_in? %>
+    var userSignedIn =  true;
+    var userOnDebug = <%=  current_user.debug %>;
+    var signedUserId = <%=  current_user.id %>;
+<% else %>
+    var userSignedIn =  false;
+    var userOnDebug = false;
+<% end %>
+
+<% if @user %>
+    var userId = <%= @user.id %>;
+    var userName = '<%= @user.nickname %>';
+    var userSlug = '<%= @user.slug %>';
+    var userActive = <%= @user.activated? %>;
+<% end %>
+
+
+<% if params[:public] %>
+    var channelName = 'MyNew.Tv Public';
+    var channelSlug = 'public';
+    playingPublicChannel = true;
+    playingChannel = false;
+<% elsif @channel %>
+    var channelSlug = '<%= @channel.slug %>';
+    var channelName = '<%= @channel.name %>';
+    var channelId = '<%= @channel.id %>';
+    playingChannel = true;
+<% else %>
+    playingChannel = false;
+<% end %>
+
+
+  /* After load */
+  document.observe("dom:loaded", function() {
+
+    <% if @channel %>   
+          currentChannel = new Channel(channelName, channelId, channelSlug, owner);
+    <% elsif @user %>
+          currentUser = new User(userName, userId, userSlug, owner);
+    <% else %>
+          /* Neither channel or user, so Public */
+    <% end %>
+
+      hashtrack.init();    
+      playlistModel = new PlaylistModel();
+      playlistView = new PlaylistView(playlistModel);
+      playlistController = new PlaylistController(playlistView, playlistModel);
+      player = new Player();
+      playerView = new PlayerView ();
+
+  <% if user_signed_in? && current_user.activated? %>   
+        feedsController = new FeedsController(5,60);
+        feedsController.configFeeds();
+        playlistController.publish_facebook = <%= user_signed_in? ? current_user.publish_to_fb? : false %>;
+        playlistController.publish_twitter = <%= user_signed_in? ? current_user.publish_to_tw? : false %>;
+        
+        searchFollowing.delay(3);
+        searchFollowers.delay(4);
+        flaresController =  new FlaresController();
+  <% end %>    
+
+    setInfoMessage.delay(3,"<%= flash[:notice] %>");
+
+    <% if params[:public] && cookies.include?("public") %>
+      <%  cookies["public"]={:value => true, :expire => 1.year.from_now} %>
+          var infoModal = new Control.Modal("/page_info/public",{
+            className: 'info_modal',
+            iframe: true,
+            closeOnClick: true
+          }).open();
+    <% elsif !cookies.include?("player") %>
+      <% cookies["playerX"]={:value => true, :expire => 1.year.from_now} %>
+    <% elsif !cookies.include?("channel") %>
+      <% cookies["channelX"]={:value => true, :expire => 1.year.from_now} %>
+    <% else %>
+      <% cookies["visitX"]={:value => true, :expire => 1.year.from_now} %>
+    <% end %>
+  
+  });
+
+
+</script>

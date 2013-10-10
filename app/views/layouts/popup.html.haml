@@ -1,0 +1,17 @@
+!!!
+%head
+  %title MyNew.TV
+  = stylesheet_link_tag "reset-min", "layout", "awesome_buttons"
+
+  = csrf_meta_tag
+
+%body
+  #header
+    = image_tag('/images/layout/logo.jpg')
+
+  #content.popup
+    = show_flash
+    = show_browser_warning?
+    = yield
+
+ 

@@ -1,0 +1,31 @@
+!!!
+%head
+  %title MyNew.TV
+  = stylesheet_link_tag "reset-min", "layout", "forms", "awesome_buttons", "fb_button"
+  = javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js' 
+  = csrf_meta_tag
+
+%body
+  #header
+    - if user_signed_in?
+      = link_to image_tag('/images/layout/logo.jpg'), player_path
+    - else
+      = link_to image_tag('/images/layout/logo.jpg'), root_path
+    %span.user_info
+      - if user_signed_in?
+        - if current_user.admin?
+          - if User.pending.count > 0
+            = link_to "Activate Users", users_to_activate_path, :class => 'awesome orange'
+          = link_to 'Phrase Scores', phrase_scores_path, :class => 'awesome'
+          = link_to 'Rating History', history_ratings_path, :class => 'awesome'
+        = link_to 'Logout', destroy_user_session_path, :class => 'awesome'
+      - else
+        = link_to 'Sign Up For Free!', new_user_registration_path, :class => 'awesome orange'
+        = link_to 'Sign In', new_user_session_path, :class => 'awesome blue'
+      
+  #content
+    = show_flash
+    = show_browser_warning?
+    = yield
+
+  = render 'layouts/google_analytics'

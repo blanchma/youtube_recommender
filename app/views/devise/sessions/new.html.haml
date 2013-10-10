@@ -1,0 +1,38 @@
+%h1 Sign in
+
+#fb_login.logins
+  - if devise_mapping.omniauthable?
+    %p Quickly get going with your social networks accounts:
+    %ul#social-icons
+    - resource_class.omniauth_providers.each do |provider|       
+      %li
+        = link_to omniauth_authorize_path(resource_name, provider) do
+          = image_tag("social-icons/#{provider}_32.png", :alt => "Sign in with #{provider.to_s.titleize}")
+          %span.button_label Sign in with #{provider.to_s.titleize}
+	
+  .clear
+
+
+#pw_login
+  %p Or sign in with your email & password!
+  = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+    = flash[:alert]
+    .group
+      = f.label :email
+      = f.text_field :email
+    
+    .group
+      = f.label :password
+      = f.password_field :password
+      %p.help
+        = link_to "Forgot your password?", new_password_path(resource_name)
+    
+    - if devise_mapping.rememberable?
+      %p
+        = f.check_box :remember_me
+        = f.label :remember_me
+    %p
+      = f.submit "Sign in", :class => 'awesome blue'
+
+= render :partial => "devise/shared/links" 
+

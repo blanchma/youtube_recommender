@@ -1,0 +1,66 @@
+#sidebar
+  #sidebar_mask
+    .title_section.blue
+      %span Search for a friend's channel
+      %img{:id => "max_users", :src => "/images/icons/light/20/btn_maximize.png", :height => "14", :width => "14",:alt => "max"}/
+    #wrapper_users.wrapper{:style => "display:none"}  
+      #search_user.search-section
+        %div
+          = text_field_tag :search_users_input, "", :class => "input_sidebar", :autocomplete => "off"
+          = link_to_function (image_tag "icons/light/20/btn_lupa.png"), :name => nil, :id => "btn_search_user", :class => "btn_search_sidebar"
+          = image_tag "icons/ajax-loader.gif", :height => "14", :width => "14", :id => "users_search_loader", :class => "sidebar_loader", :style => "display:none"
+      %div.results_box
+        %ul#results_user.results
+        
+        %div#paginate_users.pagination
+          %ul
+    = if user_signed_in? && current_user.activated?    
+      .title_section.yellow
+        %span Followers
+        %img{:id => "max_followers", :src => "/images/icons/light/20/btn_maximize.png", :height => "14", :width => "14",:alt => "max"}/ 
+      #wrapper_followers.wrapper{:style => "display:none"}  
+        #search_followers.search-section
+          %div
+            = text_field_tag :search_followers_input, "", :class => "input_sidebar", :autocomplete => "off"
+            = link_to_function (image_tag "icons/light/20/btn_lupa.png"), :name => nil, :id => "btn_search_followers", :class => "btn_search_sidebar"
+        %div.results_box
+          %ul#results_followers.results
+            
+          %div#paginate_followers.pagination
+            %ul      
+
+      .title_section.magenta
+        %span Following
+        %img{:id => "max_following", :src => "/images/icons/light/20/btn_maximize.png", :height => "14", :width => "14",:alt => "max"}/   
+      #wrapper_following.wrapper{:style => "display:none"}    
+        #search_following.search-section
+          %div
+            = text_field_tag :search_following_input, "", :class => "input_sidebar", :autocomplete => "off"
+            = link_to_function (image_tag "icons/light/20/btn_lupa.png"), :name => nil, :id => "btn_search_following", :class => "btn_search_sidebar"
+          %div.results_box
+            %ul#results_following.results
+             
+            %div#paginate_following.pagination
+              %ul      
+      .title_section.green
+        %span News feed
+        %img{:id => "min_events", :src => "/images/icons/light/20/btn_minimize.png", :height => "14", :width => "14",:alt => "min"}/   
+      #wrapper_events.wrapper
+        %div.results_box
+          %div#paginate_events.pagination   
+            %ul
+          %ul#results_events.results
+      - if current_user.admin && !current_user.admin   
+        .title_section.red
+          %span Audio comments
+          %img{:id => "min_audios", :src => "/images/icons/light/20/btn_minimize.png", :height => "14", :width => "14",:alt => "min"}/   
+        #wrapper_audios.wrapper
+          %div  
+            %span#rec_phrase Rec your comments      
+            %a{:href => "#rec_audio_window", :name => nil, :id => "rec_audio_btn", :class => "", :title => "Record your comments"}
+              = image_tag "player/player_rec.png", :height => 30, :width => 30  
+          %div.results_box       
+            %ul#results_audios.results
+
+
+

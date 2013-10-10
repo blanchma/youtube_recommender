@@ -1,0 +1,89 @@
+<div id="sidebar">
+  <div class="bottom-column" >
+    <div class="title_section blue">
+      <span>Search a friend</span>
+      <%= image_tag "icons/light/20/btn_maximize.png", :id => "max_users", :height => "14", :width => "14",:alt => "max" %>
+    </div>
+    <div id="wrapper_users" class="wrapper"  >
+      <div id="search_user" class="search-section">
+        <div>
+          <%= text_field_tag :search_users_input, "", :class => "input_sidebar", :autocomplete => "off" %>
+          <%= link_to_function (image_tag "icons/light/20/btn_lupa.png"), :name => nil, :id => "btn_search_user", :class => "btn_search_sidebar" %>
+        </div>
+      </div>
+      <div class="results_box">
+        <ul id="results_user" class="results">
+        </ul>
+        <div id="paginate_users" class="pagination">
+          <ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-column" >
+    <div class="title_section yellow">
+      <span>Followers</span>
+      <%= image_tag "icons/light/20/btn_maximize.png", :id => "max_followers", :height => "14", :width => "14",:alt => "max" %>
+    </div>
+    <div id="wrapper_followers" class="wrapper" >
+      <div id="search_followers" class="search-section">
+        <div>
+          <%= text_field_tag :search_followers_input, "", :class => "input_sidebar", :autocomplete => "off" %>
+          <%= link_to_function (image_tag "icons/light/20/btn_lupa.png"), :name => nil, :id => "btn_search_followers", :class => "btn_search_sidebar" %>
+        </div>
+      </div>
+      <div class="results_box">
+        <ul id="results_followers" class="results">
+        </ul>
+        <div id="paginate_followers" class="pagination">
+          <ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-column" >
+    <div class="title_section magenta">
+      <span>Following</span>
+      <%= image_tag "icons/light/20/btn_maximize.png", :id => "max_following", :height => "14", :width => "14",:alt => "max" %>
+    </div>
+    <div id="wrapper_following" class="wrapper" >
+      <div id="search_following" class="search-section">
+        <div>
+          <%= text_field_tag :search_following_input, "", :class => "input_sidebar", :autocomplete => "off" %>
+          <%= link_to_function (image_tag "icons/light/20/btn_lupa.png"), :name => nil, :id => "btn_search_following", :class => "btn_search_sidebar" %>
+        </div>
+        <div class="results_box">
+          <ul id="results_following" class="results">
+          </ul>
+          <div id="paginate_following" class="pagination">
+            <ul>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-column wide-column" >
+    <div class="title_section green">
+      <span>What's happening?</span>
+      <%= image_tag "/images/icons/light/20/btn_minimize.png", :id => "min_events", :height => "14", :width => "14",:alt => "min" %>
+    </div>
+
+    <div id="wrapper_events" class="wrapper">
+      <div class="results_box">
+        <div id="paginate_events" class="pagination">
+          <ul>
+          </ul>
+        </div>
+        <ul id="results_events" class="results">
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+

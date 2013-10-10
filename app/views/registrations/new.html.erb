@@ -1,0 +1,63 @@
+<h1> Sign up for MyNew.TV!</h1>
+
+
+<div id="fb_signup">
+  <p>
+    <strong> Quickly get going with your connected Facebook account.
+    We'll use your Facebook interests
+    to build a playlist for you like magic!</strong>
+  </p>
+  <p class="privacy">
+    MyNew.TV asks for your permission to read your Facebook profile to create your own personalized
+    channel. MyNew.TV has a zero spam policy and will never sell, rent or misuse your personal
+    information.
+  </p>
+<p class="logins">
+    <%= link_to omniauth_authorize_path(:user, :facebook) do %>
+        <%= image_tag("social-icons/facebook_32.png", :alt => "Sign up with Facebook")  %>
+        <span class="button_label">Sign Up with Facebook</span>
+      <% end %>
+</p>
+</div>
+
+<div id="fb_signup">
+ <p>
+    <strong> You can connect with your Twitter account</strong>
+  </p>
+ <p class="privacy">
+    MyNew.TV will use your Twitter bio to create your own personalized channel. 
+    MyNew.TV has a zero spam policy and will never sell, rent or misuse your personal
+    information.
+  </p>
+ 
+<p class="logins">
+    <%= link_to omniauth_authorize_path(:user, :twitter) do %>
+        <%= image_tag("social-icons/twitter_32.png", :alt => "Sign up with Twitter")  %>
+        <span class="button_label">Sign Up with Twitter</span>
+  <% end %>
+</p>
+</div>
+
+<div id="pw_signup">
+  <p>Or sign in with your email & password! Then you just answer some questions about things you like,
+    and we'll create your customized playlist!</p>
+  <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+    <%= devise_error_messages! %>
+    <div class="group">
+      <%= f.label :email %>
+      <%= f.text_field :email %>
+</div>
+    <div class="group">
+      <%= f.label :password %>
+      <%= f.password_field :password %>
+</div>
+    <div class="group">
+      <%= f.label :password_confirmation %>
+      <%= f.password_field :password_confirmation %>
+</div>
+    <div class="group">
+      <%= f.submit "Sign up", :class => 'awesome orange' %>
+
+</div>
+<% end %>
+</div>

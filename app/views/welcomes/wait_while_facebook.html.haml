@@ -1,0 +1,37 @@
+%div.facebook
+  %h3= "Hi, #{current_user.email}!  Wait a few seconds, MyNew.Tv is searching for the best videos for you..."
+
+:javascript
+
+  Event.observe(window, 'load', seekDataOnFacebook);
+
+  function seekDataOnFacebook () {
+        new Ajax.Request("/crawl_facebook", {
+          method: 'get',
+          onSuccess: function(response) {
+            //setInterval ( "hasPhrases()", 2000 );
+            
+             if (response.responseText == 'true') {
+               window.location.href = "#{player_path}"
+            }
+            else {
+              window.location.href = "#{phrases_path}"
+            }
+          }
+        });
+      }
+      
+  function hasPhrases () {
+    new Ajax.Request("/has_phrases", {
+      method: 'get',
+      onSuccess: function(response) {
+        if (response.responseText == 'true') {
+          window.location.href = "#{player_path}"
+        }
+      }
+    });
+  }
+
+    
+    
+

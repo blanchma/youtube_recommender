@@ -1,0 +1,48 @@
+<div id="audio_player_1">Install flash plugin </div>
+
+<script type="text/javascript">
+  /*var flashvars = {
+    file:'audioStream_1300132110951_5.flv',
+    streamer: '<%= RTMP_SERVER %>',
+    provider: 'rtmp'
+  };
+
+  swfobject.embedSWF('/player.swf','audio_player_1','480','270','9.0.115','false', flashvars,
+
+   {allowfullscreen:'true',allowscriptaccess:'always'},
+   {id:'audio_player_1',name:'audio_player_1'}
+
+  );  */
+  
+  jwplayer('audio_player_1').setup({
+    'flashplayer': '/jwplayer/player-non-viral.swf',
+    'id': 'player1',
+    'allowScriptAccess': "always",
+    'controlbar': 'bottom',  
+    'screencolor': "#000000",
+    'wmode':'opaque',
+    'width': '190',
+    'skin' : "/jwplayer/simple.zip",
+    'height': '20',
+     events: {
+            onComplete: function() {
+                // alert("onComplete");
+               //   jwplayer('audio_player_1').stop();
+                //  setTimeout("jwplayer('audio_player_1').stop()",500);
+            }
+        }
+     });
+     
+     var newAudio = {
+            file: 'audioStream_1300195915096_83.flv',           
+            streamer: 'rtmp://localhost/audiorecorder/_definst_',
+            provider: 'rtmp',
+            title: 'prueba'
+     };
+    jwplayer('audio_player_1').load(newAudio);
+  
+
+  
+  
+     
+</script>

@@ -1,0 +1,59 @@
+form label, form input, form select {
+  display: block;
+  margin: 0 0 0 0px;
+  clear: both; }
+form label {
+  font-weight: bold; }
+form input[type=checkbox], form input[type=submit], form input[type=radio] {
+  clear: none;
+  display: inline; }
+form input[type=text], form input[type=password], form input[type=textarea] {
+  width: 400px;
+  padding: 3px; }
+form input[type=radio] + label, form input[type=checkbox] + label {
+  display: inline; }
+form label[for=remember_me] {
+  display: inline; }
+form .example {
+  background-color: #f0f09e;
+  padding: 0.2em; }
+form p.help {
+  color: #777777;
+  font-size: 0.8em; }
+form .group {
+  margin-bottom: 1em;
+  clear: both; }
+  form .group textarea {
+    height: 4em;
+    width: 100%; }
+  form .group input + input {
+    margin-top: 0.5em; }
+
+#fb_login, #pw_login, #fb_signup, #pw_signup {
+  background: #dedede;
+  border: 1px solid #999999;
+  padding: 1em;
+  width: 80%;
+  margin-bottom: 2em; }
+  #fb_login p.privacy, #pw_login p.privacy, #fb_signup p.privacy, #pw_signup p.privacy {
+    font-size: 0.675em;
+    margin-bottom: 1em; }
+  #fb_login p.forgot, #pw_login p.forgot, #fb_signup p.forgot, #pw_signup p.forgot {
+    font-size: 0.875em; }
+    #fb_login p.forgot a, #pw_login p.forgot a, #fb_signup p.forgot a, #pw_signup p.forgot a {
+      color: black; }
+
+.button_label {
+  font-size: 0.8em;
+  vertical-align: top;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 3px;
+}
+
+.logins a, .logins a:active, .logins a:visited {
+  text-decoration:none;
+  color: #333;
+}
+
+

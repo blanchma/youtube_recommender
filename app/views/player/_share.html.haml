@@ -1,0 +1,28 @@
+#share_box
+  %div
+    %span Share this video on
+    = link_to_function image_tag("icons/facebook_share.png"), :onclick => "shareOnFacebook()"
+    %div#share_tweet_button
+      = link_to "Tweet", "http://twitter.com/share", :class=>"twitter-share-button", "data-url"=>"http://mynew.tv", "data-text"=>"MyNew.TV helps you discover & share things you love", "data-count"=>"none", "data-via"=>"mynewtv"
+    - if user_signed_in?
+      %div{:style => "margin-top:5px"}
+        %span Publish all your likes on
+        
+        - if current_user.facebook?  && current_user.publish_to_fb?
+          =link_to_function image_tag("icons/btn_facebook_color.png", :height => "25", :width => "25", :id => "publish_fb", :publish=>"true"), :onclick => "publishAllLikedOnFacebook()"        
+        - elsif current_user.facebook?
+          =link_to_function image_tag("icons/light/btn_facebook.png", :height => "25", :width => "25", :id => "publish_fb", :publish=>"false"), :onclick => "publishAllLikedOnFacebook()"
+        - else
+          =link_to image_tag("icons/light/btn_facebook.png", :height => "25", :width => "25", 
+:title => "Add your Facebook account"), omniauth_authorize_path(:user, :facebook), :onclick => "popupCenter (this.href, 600,400, 'Facebook'); return false"
+
+        - if current_user.twitter? && current_user.publish_to_tw?    
+          =link_to_function image_tag("icons/btn_twitter_color.png", :height => "25", :width => "25", :id => "publish_tw", :publish=>"true"), :onclick => "publishAllLikedOnTwitter()"
+        - elsif current_user.twitter?
+          =link_to_function image_tag("icons/light/btn_twitter.png", :height => "25", :width => "25", :id => "publish_tw", :publish=>"false"), :onclick => "publishAllLikedOnTwitter()"
+        - else
+          =link_to image_tag("icons/light/btn_twitter.png", :height => "25", :width => "25", 
+:title => "Add your Twitter account"), omniauth_authorize_path(:user, :twitter), :onclick => "popupCenter (this.href, 600,400, 'Twitter'); return false"
+
+  
+  

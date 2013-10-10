@@ -1,0 +1,24 @@
+=clearfix {
+  *display: inline-block; }
+  =clearfix:after {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden; }
+
+#homepage h1 {
+  font-weight: bold;
+  font-size: 2em;
+  text-align: center;
+  margin-bottom: 0.875em; }
+#homepage .demo {
+  float: left;
+  margin-left: 2em;
+  width: 450px; }
+#homepage p.signup {
+  font-size: 2em; }
+#homepage ol.why li {
+  font-size: 1.25em;
+  line-height: 2;
+  list-style: decimal inside; }

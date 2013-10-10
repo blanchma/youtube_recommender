@@ -1,0 +1,62 @@
+<div id="channel_list" style="display:none">
+  <div class="left_channel_section" >
+    <% if @owner %>
+      <span class="title"> Your channels</span>
+    <% else %>
+      <span class="title"><%= @user.nickname %> channels</span>
+    <% end %>
+    <%= image_tag "icons/btn_tv.png", :title => "Your Channels" %>
+  </div>
+  <div class="right_channel_section">
+    <ul id="channels_displayer">
+      <% if @user.channels.count > 0 %>
+        <% @user.channels.reverse.each do |channel| %>
+          <%= render :partial => "channels/item", :locals => { :channel => channel } %>
+        <% end %>
+      <% end %>
+
+      <% if @owner %>
+        <li>
+          <div id="channel_actions">
+            <ul>
+              <li>
+                <%= link_to_function "Create", :class => 'awesome red awesome_text', :id => "show_create_channel" %>
+              </li>
+            </ul>
+          </div>
+          <div class="channel_help">
+            Drag & drop any video from the playlist to your channels.
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+
+<% if  @owner %>
+  <div id="create_channel" style="display: none;">
+    <div id="channel_draggable" class="awesome_top_bar orange"><span class="title">Create a new channel</span>
+      <%= image_tag "icons/light/20/btn_cerrar.png", :name => "close", :id => "hide_create_channel", :alt => "Close", :style => "float:right; margin-right:10px;", :height => "15", :width => "15" %></div>
+    <span id="channel_message"></span>
+    <div class="inner_modal">
+      <%= form_tag user_channels_path(:user_id => @user.id), :remote => true do %>
+        <%= label_tag  :name %>
+        <%= text_field_tag :name, "", :size => 50, :id => "channel_input_name" %>
+        <%= hidden_field_tag :video_ids, "", :id => "seed_id"  %>
+        <h4>Drag a video to seed your new channel</h4>
+        <div class="wrap_seeds">
+          <div id="seeds"></div>
+        </div>
+
+          
+
+          <div class="send">
+            <%= submit_tag "Submit", :class => "awesome blue" %>
+          </div>
+
+      <% end %>
+    </div>
+  </div>
+
+<% end %>

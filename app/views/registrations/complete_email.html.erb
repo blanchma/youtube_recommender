@@ -1,0 +1,23 @@
+
+
+<div id="pw_signup">
+  <h1>Complete your email</h1>
+<p> Fill your email to finish the registration. </p>
+  <%= form_for(resource, :as => resource_name, :url => update_email_path) do |f| %>
+   <% if @user.errors.any? %>
+    <div id="errorExplanation">
+      <ul>
+        <li style="color: Red;"><%= @user.errors.full_messages.last %></li>
+      </ul>
+</div>
+<% end %>
+
+    <div class="group">
+      <%= f.label :email %>
+      <%= f.text_field :email %>
+  </div>  
+    <div class="group">
+      <%= f.submit "Sign up", :class => 'awesome orange' %>
+   </div>
+<% end %>
+

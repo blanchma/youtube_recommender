@@ -1,0 +1,80 @@
+= javascript_include_tag 'mynewtv_channel_player'
+#header.player
+  = image_tag('/images/player/logo.jpg')
+
+  %span.user_info
+    - if user_signed_in?
+      Hi, 
+      = current_user.email
+      = link_to 'Logout', destroy_user_session_path, :class => 'awesome'
+      = link_to 'Prefs', preferences_path, :class => 'awesome'
+      = link_to 'New Videos', player_path, :class => 'awesome green'
+      
+
+      - if current_user.admin?
+        - if User.pending.count > 0
+          = link_to "Activate", users_to_activate_path, :class => 'awesome orange'
+        = link_to "Dbg: #{current_user.debug?}", player_debug_toggle_path, :class => 'awesome'
+        = link_to 'History', history_ratings_path, :class => 'awesome'
+        = link_to "Phrases", phrase_scores_path, :class => 'awesome'
+    - else
+      = link_to 'Sign In', new_user_session_path, :class => 'awesome'
+  
+#middle
+  #player
+    #playlist
+      %ul.list-view
+        %li#recs
+          .list-title
+            %h2 Coming up on MyNew.TV:
+          %ul.videos#video_thumbs        
+              
+           
+      / #signup_message
+      /   %h2 See more great videos!
+      /   %p
+      /     Get a free personalized channel.
+      /   %p.signup
+      /     = link_to 'Click Here!', new_user_registration_path, :class => 'awesome magenta'
+    #video
+      #title &nbsp;
+      #mynewtv_player
+      #controls
+        %a(href='#' onclick='Mynewtv.playOrPause();return false;' class='awesome')
+          Play/pause
+
+        - if user_signed_in?
+          = liked_it_button :class => 'awesome magenta'
+        = skip_it_button  :class => 'awesome'
+        - if user_signed_in?
+          = hated_it_button :class => 'awesome red'
+
+        %span#time
+          %span#duration &nbsp;
+          seconds long
+      #rating_message &nbsp;
+      = render 'player/social_post'
+      #keywords &nbsp;
+      #description &nbsp;
+      
+:javascript
+  var userChannel = '#{@user.to_param}';
+  var userSignedIn = #{user_signed_in?};
+  var publishFacebook = #{user_signed_in? ? current_user.publish_to_fb? : 'false'};
+  
+  var Mynewtv = null;
+  document.observe("dom:loaded", function() {
+    Mynewtv = new MynewtvChannelPlayerController();
+    Mynewtv.userId = userChannel;
+  });
+  
+  function onYouTubePlayerReady(playerId) {
+    Mynewtv.player = $(Mynewtv.playerId);
+    Mynewtv.userSignedIn = userSignedIn;
+    Mynewtv.player.addEventListener('onStateChange', 'onYouTubePlayerStateChange');
+    Mynewtv.player.addEventListener('onError',       'onYouTubePlayerError');
+    Mynewtv.publish_facebook = publishFacebook;
+    log('requesting channel...');
+    Mynewtv.requestUserChannelPlaylist();
+    setInterval(Mynewtv.updatePlayerInfo.bind(Mynewtv), 500);
+  }

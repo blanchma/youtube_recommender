@@ -1,0 +1,561 @@
+
+/*
+    awesome buttons are based on a blog post by ZERB
+    Read there blog post for more information:
+    "Super awesome Buttons with CSS3 and RGBA":http://www.zurb.com/article/266/super-awesome-buttons-with-css3-and-rgba
+
+    this buttons are even more awesome, as the need only one color for all three states,
+    and have an super awesome onclick state
+*/
+
+/* set an awesome color for the buttons, feel free to add new colors like an .awesome.green or .awesome.secondary */
+.awesome {
+    background-color: #111;
+    color: #fff !important;
+}
+
+.awesome-bar {
+    border: 0 !important;
+    cursor: pointer !important;
+    font-style: normal !important;
+    font-weight: bold !important;
+    font: inherit !important;
+    line-height: 1 !important;
+    position: relative !important;
+    text-align: center !important;
+    text-decoration: none !important;
+
+    /* vertical margin is the oposite of button's awesomeness */
+    margin-top: 0 ;
+    margin-bottom: 0;
+
+    /* not all browser support these, but who cares? */
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25), -2px 0 1px rgba(0,0,0,0.25) !important;
+
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+
+    /* one image for all states
+       see http://www.alistapart.com/articles/sprites */
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,.2), rgba(150,150,150,.2), rgba(0,0,0,.0)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(0,0,0,.0))) !important;
+
+    /* cross browser inline block hack
+       see http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/ */
+    display: -moz-inline-stack;
+
+    vertical-align: middle;
+
+    position: relative;
+
+    /* IE luv */
+    zoom: 1;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#30ffffff,endColorstr=#10000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+
+    /*disable text selection (Firefox only)*/
+    -moz-user-select: none;
+}
+
+.awesome-bar {
+    padding: 6px 0 5px 0;
+    height: 20px;
+    width:100%;
+    display: inline-block;
+}
+
+.left_side {
+    border-radius: 5px 0 0 5px !important;
+    -moz-border-radius: 5px 0 0 5px !important;
+}
+
+.right_side {
+    border-radius: 5px 0 0 5px !important;
+    -moz-border-radius: 5px 0 0 5px !important;
+}
+
+/* the awesome size gets set here. Feel Free to add new sizes, like .awesome.small or .small.large   */
+.awesome        { padding: 5px 10px 6px ; font-size: 13px !important; }
+.awesome:active	{ padding: 6px 10px 5px ; }
+
+.buttons {
+  padding: 10px !important;
+  margin-left: 4px;
+  margin-right: 2px;
+}
+
+.awesome        { padding: 5px 10px 6px ; font-size: 13px !important; }
+.awesome:active	{ padding: 6px 10px 5px ; }
+
+/* Touch the rest at your onw risk. */
+.awesome {
+    border: 0 !important;
+    cursor: pointer !important;
+    font-style: normal !important;
+    font-weight: bold !important;
+    font: inherit !important;
+    line-height: 1 !important;
+    position: relative !important;
+    text-align: center !important;
+    text-decoration: none !important;
+
+    /* vertical margin is the oposite of button's awesomeness */
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+
+    /* not all browser support these, but who cares? */
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25), -2px 0 1px rgba(0,0,0,0.25) !important;
+    border-radius: 5px !important;
+    -moz-border-radius: 5px !important;
+    -webkit-border-radius: 5px !important;
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+
+    /* one image for all states
+       see http://www.alistapart.com/articles/sprites */
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,.2), rgba(150,150,150,.2), rgba(0,0,0,.0)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(0,0,0,.0))) !important;
+
+    /* cross browser inline block hack
+       see http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/ */
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle !important;
+    display: inline !important;
+    position: relative;
+
+    /* IE luv */
+    zoom: 1;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#30ffffff,endColorstr=#10000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+
+    /*disable text selection (Firefox only)*/
+    -moz-user-select: none;
+}
+/* hide selection background color */
+.awesome::selection {
+    background: transparent;
+}
+
+.awesome {
+    outline: 0; /*remove dotted line, works for links only*/
+}
+.awesome::-moz-focus-inner {
+    border: none; /* remove dotted lines for buttons */
+}
+.awesome:focus,
+.awesome:hover {
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,.4), rgba(150,150,150,.3), rgba(0,0,0,.0)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.4)), color-stop(0.5, rgba(150,150,150,.3)), to(rgba(0,0,0,.0))) !important;
+    #filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#50ffffff,endColorstr=#20000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+}
+.awesome:active	{
+    background-image: -moz-linear-gradient(top, rgba(0,0,0,.2), rgba(150,150,150,.2), rgba(255,255,255,.2)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0,0,0,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(255,255,255,.2))) !important;
+    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.7) !important;
+    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.7) !important;
+
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#20000000,endColorstr=#50ffffff) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=315,strength=1);
+}
+
+/* Safari doesn't support inset box shadow, so we better remove it */
+@media screen and (-webkit-min-device-pixel-ratio:0){
+    .awesome:active	{
+        -webkit-box-shadow: none;
+    }
+}
+
+.dark_blue {
+    background-color:	#00008B;
+}
+
+.green {
+    background-color: #45a54e;
+}
+
+.blue {
+    background-color: #2daebf;
+}
+
+.red {
+    background-color: #e33100;
+}
+
+.magenta {
+    background-color: #a9014b;
+}
+
+.orange {
+    background-color: #ff5c00;
+}
+
+.yellow {
+    background-color: #ffb515;
+}
+
+.dark_red {
+    background-color: #8B0000;
+    //    background-color: Red;
+}
+
+.dark_grey {
+    background-color: #111;
+    color: #fff !important;
+}
+
+.grey {
+  	    background-color: #808080;
+  	    color: White !important;
+}
+
+.orange_red {
+    background-color:  #FF4500;
+}
+
+.buttons_awesome {
+
+    height: 40px;
+    width: 40px;
+    padding: 4px;
+    margin-left: 2px;
+    display: inline-block;
+    border: 0 !important;
+    cursor: pointer !important;
+    font-style: normal !important;
+    font-weight: bold !important;
+    font: inherit !important;
+
+    text-align: center !important;
+    text-decoration: none !important;
+
+
+    /* not all browser support these, but who cares? */
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25), -2px 0 1px rgba(0,0,0,0.25) !important;
+    border-radius: 5px 5px 5px 5px !important;
+    -moz-border-radius: 5px 5px 5px 5px !important;
+
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+
+    /* one image for all states
+       see http://www.alistapart.com/articles/sprites */
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,.2), rgba(150,150,150,.2), rgba(0,0,0,.0)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(0,0,0,.0))) !important;
+
+    /* cross browser inline block hack
+       see http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/ */
+    display: -moz-inline-stack;
+
+    vertical-align: middle !important;
+
+    position: relative;
+
+    /* IE luv */
+    zoom: 1;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#30ffffff,endColorstr=#10000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+
+    /*disable text selection (Firefox only)*/
+    -moz-user-select: none;
+
+}
+
+.buttons_awesome:hover, .buttons_awesome:focus {
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,.8), rgba(150,150,150,.8), rgba(0,0,0,.0)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.4)), color-stop(0.5, rgba(150,150,150,.3)), to(rgba(0,0,0,.0))) !important;
+    #filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#50ffffff,endColorstr=#30000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+}
+}
+
+.mini_buttons_awesome {
+    padding: 8px 0px 0px 0px;
+    height: 20px;
+    width: 20px;
+
+    display: inline-block;
+    border: 0 !important;
+    cursor: pointer !important;
+    text-align: center !important;
+    text-decoration: none !important;
+
+
+    /* not all browser support these, but who cares? */
+    text-shadow: 0 -3px 3px rgba(0,0,0,0.25), -3px 0 3px rgba(0,0,0,0.25) !important;
+    border-radius: 3px 3px 3px 3px !important;
+    -moz-border-radius: 3px 3px 3px 3px !important;
+
+    -moz-box-shadow: 0 3px 3px rgba(0,0,0,0.5) !important;
+    -webkit-box-shadow: 0 3px 3px rgba(0,0,0,0.5) !important;
+
+    /* one image for all states
+       see http://www.alistapart.com/articles/sprites */
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,.2), rgba(150,150,150,.2), rgba(0,0,0,.0)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(0,0,0,.0))) !important;
+
+    /* cross browser inline block hack
+       see http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/ */
+    display: -moz-inline-stack;
+
+    vertical-align: middle !important;
+
+    position: relative;
+
+    /* IE luv */
+    zoom: 1;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#30ffffff,endColorstr=#10000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+
+    /*disable text selection (Firefox only)*/
+    -moz-user-select: none;
+
+}
+
+.mini_buttons_awesome img {
+    margin: 0 !important;
+    vertical-align: top !important;
+
+}
+
+
+.buttons_medium_awesome {
+
+    height: 35px;
+    width: 35px;
+    padding: 3px;
+    margin-left: 4px;
+    display: inline-block;
+    border: 0 !important;
+    cursor: pointer !important;
+    font-style: normal !important;
+    font-weight: bold !important;
+    font: inherit !important;
+
+    text-align: center !important;
+    text-decoration: none !important;
+
+
+    /* not all browser support these, but who cares? */
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25), -2px 0 1px rgba(0,0,0,0.25) !important;
+    border-radius: 4px 4px 4px 4px !important;
+    -moz-border-radius: 4px 4px 4px 4px !important;
+
+    -moz-box-shadow: 0 2px 3px rgba(0,0,0,0.5) !important;
+    -webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.5) !important;
+
+    /* one image for all states
+       see http://www.alistapart.com/articles/sprites */
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,.2), rgba(150,150,150,.2), rgba(0,0,0,.0)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(0,0,0,.0))) !important;
+
+    /* cross browser inline block hack
+       see http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/ */
+    display: -moz-inline-stack;
+
+    vertical-align: middle !important;
+
+    position: relative;
+
+    /* IE luv */
+    zoom: 1;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#30ffffff,endColorstr=#10000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+
+    /*disable text selection (Firefox only)*/
+    -moz-user-select: none;
+}
+
+.buttons_medium_awesome img {
+    margin: 0 !important;
+    vertical-align: middle !important;
+    padding-top: 3px;
+}
+
+.buttons_medium_awesome:hover, .buttons_medium_awesome:focus { 
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,.4), rgba(150,150,150,.3), rgba(0,0,0,.0)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.4)), color-stop(0.5, rgba(150,150,150,.3)), to(rgba(0,0,0,.0))) !important;
+    #filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#50ffffff,endColorstr=#20000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+}
+
+.top_awesome_bar {
+   border: 0 !important;
+
+    font-style: normal !important;
+    font-weight: bold !important;
+    font: inherit !important;
+    line-height: 0 !important;
+    position: relative !important;
+    text-align: center !important;
+    text-decoration: none !important;
+
+    /* vertical margin is the oposite of button's awesomeness */
+    margin-top:-5px;
+    margin-bottom: 0;
+
+    /* not all browser support these, but who cares? */
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25), -2px 0 1px rgba(0,0,0,0.25) !important;
+
+    border-radius: 15px 15px 0 0  !important;
+   /* -moz-border-radius: 15px 15px 0 0  !important;
+    -webkit-border-radius: 15px 15px 0  0 !important; */
+  
+    
+    /* one image for all states
+       see http://www.alistapart.com/articles/sprites */
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,.2), rgba(150,150,150,.2), rgba(0,0,0,.0)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(0,0,0,.0))) !important;
+
+    /* cross browser inline block hack
+       see http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/ */
+    display: -moz-inline-stack;
+
+    vertical-align: middle;
+
+    position: relative;
+
+    /* IE luv */
+    zoom: 1;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#30ffffff,endColorstr=#10000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+
+    /*disable text selection (Firefox only)*/
+    -moz-user-select: none;
+    padding: 0;
+    height: 5px;
+
+    width:100%;
+    display: inline-block;  
+}
+
+
+.awesome_text {
+ padding: 3px 4px 3px 4px !important;
+ font-size: 0.9em !important; 
+}
+
+
+.awesome_top_bar {
+    border: 0 !important;
+    cursor: pointer !important;
+    font-style: normal !important;
+    font-weight: bold !important;
+    font: inherit !important;
+    line-height: 1 !important;
+    position: relative !important;
+    text-align: center !important;
+    text-decoration: none !important;
+
+    /* vertical margin is the oposite of button's awesomeness */
+    margin-top: 0 ;
+    margin-bottom: 0;
+
+    /* not all browser support these, but who cares? */
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25), -2px 0 1px rgba(0,0,0,0.25) !important;
+
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+
+    /* one image for all states
+       see http://www.alistapart.com/articles/sprites */
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,.2), rgba(150,150,150,.2), rgba(0,0,0,.0)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(0,0,0,.0))) !important;
+
+    /* cross browser inline block hack
+       see http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/ */
+    display: -moz-inline-stack;
+
+    vertical-align: middle;
+
+    position: relative;
+
+    /* IE luv */
+    zoom: 1;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#30ffffff,endColorstr=#10000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+
+    /*disable text selection (Firefox only)*/
+    -moz-user-select: none;
+}
+
+.awesome_top_bar {
+    padding: 8px 0 0 0;
+    height: 20px;
+    width:100%;
+    display: inline-block;
+    color: White;
+    font-size: 1.05em;
+    font-weight: bold;
+}
+
+.awesome_top_bar {
+  
+}
+
+
+
+.big_awesome        { padding: 10px 28px 10px ; font-size: 13px !important; }
+.big_awesome:active	{ padding: 11px 28px 9px ; }
+
+/* Touch the rest at your onw risk. */
+.big_awesome {
+    color: #fff !important;
+    
+    border: 0 !important;
+    cursor: pointer !important;
+    font-style: normal !important;
+    font-weight: bold !important;
+    font: inherit !important;
+    line-height: 1 !important;
+    position: relative !important;
+    text-align: center !important;
+    text-decoration: none !important;
+
+    /* vertical margin is the oposite of button's awesomeness */
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+
+    /* not all browser support these, but who cares? */
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25), -2px 0 1px rgba(0,0,0,0.25) !important;
+    border-radius: 5px !important;
+    -moz-border-radius: 5px !important;
+    -webkit-border-radius: 5px !important;
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+
+    /* one image for all states
+       see http://www.alistapart.com/articles/sprites */
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,.2), rgba(150,150,150,.2), rgba(0,0,0,.0)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(0,0,0,.0))) !important;
+
+    /* cross browser inline block hack
+       see http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/ */
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle !important;
+    display: inline !important;
+    position: relative;
+
+    /* IE luv */
+    zoom: 1;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#30ffffff,endColorstr=#10000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+
+    /*disable text selection (Firefox only)*/
+    -moz-user-select: none;
+}
+/* hide selection background color */
+.big_awesome::selection {
+    background: transparent;
+}
+
+.big_awesome {
+    outline: 0; /*remove dotted line, works for links only*/
+}
+.big_awesome::-moz-focus-inner {
+    border: none; /* remove dotted lines for buttons */
+}
+.big_awesome:focus,
+.big_awesome:hover {
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,.4), rgba(150,150,150,.3), rgba(0,0,0,.0)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.4)), color-stop(0.5, rgba(150,150,150,.3)), to(rgba(0,0,0,.0))) !important;
+    #filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#50ffffff,endColorstr=#20000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+}
+.big_awesome:active	{
+    background-image: -moz-linear-gradient(top, rgba(0,0,0,.2), rgba(150,150,150,.2), rgba(255,255,255,.2)) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0,0,0,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(255,255,255,.2))) !important;
+    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.7) !important;
+    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.7) !important;
+
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#20000000,endColorstr=#50ffffff) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=315,strength=1);
+}

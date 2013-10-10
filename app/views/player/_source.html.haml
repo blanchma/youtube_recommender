@@ -1,0 +1,112 @@
+%div#fb_rec_box.facebook_friend{:style => "display:none"}
+  %input{:type => "hidden", :id => "fb_post_id", :class => "fb_hidden"}
+  %input{:type => "hidden", :id => "mynewtv_id", :class => "fb_hidden"}
+  %input{:type => "hidden", :id => "fb_friend_id", :class => "fb_hidden"}
+  %input{:type => "hidden", :id => "fb_comment_id", :class => "fb_hidden"}
+  %input{:type => "hidden", :id => "fb_feed_id", :class => "fb_hidden"}
+  %input{:type => "hidden", :id => "fb_post_likes", :class => "fb_hidden"}
+  %input{:type => "hidden", :id => "fb_post_liked", :class => "fb_hidden"}
+  %input{:type => "hidden", :id => "fb_comment_liked_id", :class => "fb_hidden"}
+  %input{:type => "hidden", :id => "fb_friend_name", :class => "fb_hidden"}
+  %input{:type => "hidden", :id => "fb_ready_to_like", :class => "fb_hidden"}
+  
+  
+  %div#picture
+    %img{:id => "fb_friend_pic", :title => "Username", :src => "https://graph.facebook.com/blanchma/picture?type=large", :height => 80, :width => 80}
+    
+  %div#buttons
+    %ul
+      %li
+        = link_to_function image_tag("icons/light/20/btn_tv.png", :id=>"channel_or_invite", :target => "channel", :height => 20, :width => 20, :title => "Channel", :class => "show_button")
+        = link_to_function image_tag("icons/btn_follow_blue.png", :id=>"follow_fb", :height => 25, :width => 25, :title => "Follow", :target => "follow_tab", :class => "show_button" ), :onclick => "followFbUser()"
+        = link_to_function image_tag("icons/light/20/btn_unfollow.png", :id=>"unfollow_fb", :height => 16, :width => 16, :title => "Unfollow", :target => "follow_tab", :class => "show_button"), :onclick => "unfollowFbUser()"
+      %li
+        = link_to_function image_tag("icons/light/20/btn_like.png", :id=> "show_like", :height => 18, :width => 18, :title => "Like in Facebook", :target => "fb_like", :class => "show_button", :onclick => "" )
+      %li
+        = link_to_function image_tag("icons/light/20/btn_facebook.png", :id=>"show_comment", :height => 18, :width => 18, :title => "Comment", :target => "comment_to_facebook", :class => "show_button")
+        
+        
+  %div#action_area
+    %div#channel.tab{:style => "display: none;"}
+      %div.left_col
+        %img{:src => "/images/icons/dark/btn_tv.png", :width => "50", :height =>"50"}
+      %div.right_col  
+        %ul
+          %li
+            %a{:href=>"http://www.google.com", :class => "go_to_channel"}Open here
+          %li
+            &nbsp;or&nbsp;
+          %li 
+            %a{:href => "http://www.google.com", :class => "go_to_channel", :target => "_blank"} Open in a new tab
+      %div.wait_col
+          
+            
+    %div#follow_tab.tab{:style => "display: none;"}
+      %div.left_col
+        %img{:src => "/images/icons/dark/btn_tv.png", :width => "50", :height =>"50"}
+      %div.right_col  
+        %span.message_tab#status_follow
+        %span.message_tab#fb_mynewtv_user
+
+        
+    %div#no_channel.tab{:style => "display: none;"}
+      %div.left_col
+        %img{:src => "/images/icons/dark/btn_tv.png", :width => "50", :height =>"50"}
+      %div.right_col  
+        %span.friend_name Blanch Matias
+        %span.message_tab is not user of MyNew.TV 
+        
+        %span.message_tab Invite by 
+        = link_to_function image_tag("icons/light/20/btn_email.png", :height => 17, :widht => 17, :title => "email", :target => "invitation_mail", :class => "show_button", :id => "show_mail")
+        &nbsp;or&nbsp;
+        = link_to_function image_tag("icons/light/20/btn_facebook.png", :height => 17, :widht => 17, :title => "facebook", :target => "invitation_feed", :class => "show_button", :id => "show_feed")
+
+        
+    %div#fb_like.tab{:style => "display: none;"}
+      %div.left_col
+        %img{:src => "/images/icons/dark/btn_facebook.png", :width => "50", :height =>"50"}
+      %div.right_col#like_actions{:style => "diplay:none"}     
+        = image_tag("icons/light/20/btn_like.png", :height => 13, :widht => 13)
+        = link_to_function "Like this.", :id => "like_this", :onclick => "likePost()",:style => "display:none"        
+        %span.message_tab#people_likes{:style => "diplay:none"}      
+        = link_to_function "Unlike", :id => "unlike", :onclick => "destroyLike()",:style => "display:none;"
+        = image_tag "icons/facebook_loader.gif",:id => "like_loader", :style => "display:none"
+
+          
+    %div#comment_to_facebook.fb_tab.tab{:style => "display: none;"}
+      %span Comment the post of 
+      %span.friend_name Blanch Matias
+      = image_tag("icons/light/20/btn_facebook.png", :height => 17, :widht => 17, :title => "facebook", :class => "corner")
+      = image_tag "icons/facebook_loader.gif", :class => "facebook_loader", :style => "display:none"
+      %div.fb_txt_area
+        = text_area_tag :comment_text
+                    
+      = link_to_function "Delete last comment", :onclick => "deleteComment()", :id => "delete_comment", :style => "display: none"
+      = button_to_function "Comment", :onclick => "sendComment()"      
+      %span#message_comment
+      
+    %div#invitation_feed.fb_tab.tab{:style => "display: none;"}
+      %span Send an invitation to
+      %span.friend_name Blanch Matias  
+      = image_tag("icons/light/20/btn_facebook.png", :height => 17, :widht => 17, :title => "facebook", :class => "corner")
+      = image_tag "icons/facebook_loader.gif", :class => "facebook_loader", :style => "display:none"
+      %div.fb_txt_area
+        = text_area_tag :feed_text
+      
+      = link_to_function "Undo invitation", :onclick => "deleteFeed()", :id => "delete_feed", :style => "display: none"
+      = button_to_function "Invite", :onclick => "sendFeed()"
+      %span#message_invite
+      
+    %div#invitation_mail.tab{:style => "display: none; "}
+      %div.left_col
+        %img{:src => "/images/icons/dark/btn_email.png", :width => "50", :height =>"50"}
+      %div.right_col  
+        %span Send an email invitation to
+        %span.friend_name Blanch Matias  
+        = text_field_tag :friend_mail        
+        = button_to_function "Send", :onclick => "sendMailInvitation()"
+        %br
+        %span#msg_mail
+   
+        
+      

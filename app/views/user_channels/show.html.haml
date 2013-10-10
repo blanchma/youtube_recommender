@@ -1,0 +1,128 @@
+- content_for(:bottom_script) do
+  = stylesheet_link_tag "player"
+  = javascript_include_tag "prototype/mynewtv_channel_player"
+
+#header.player
+  = image_tag('/images/player/logo.jpg')
+  %span.user_info
+    - if user_signed_in?
+      Hi, 
+      = current_user.email
+      = link_to 'Logout', destroy_user_session_path, :class => 'awesome'
+      = link_to 'Prefs', preferences_path, :class => 'awesome'
+      = link_to 'My Player', player_path, :class => 'awesome green'
+      
+
+      - if current_user.admin?
+        - if User.pending.count > 0
+          = link_to "Activate", users_to_activate_path, :class => 'awesome orange'
+        = link_to "Dbg: #{current_user.debug?}", player_debug_toggle_path, :class => 'awesome'
+        = link_to 'History', history_ratings_path, :class => 'awesome'
+        = link_to "Phrases", phrase_scores_path, :class => 'awesome'
+    - else
+      = link_to 'Sign In', new_user_session_path, :class => 'awesome blue'
+#middle
+  
+  %div.tweet_button
+    = link_to "Tweet", "http://twitter.com/share", :class=>"twitter-share-button", "data-url"=>"http://mynew.tv", "data-text"=>"MyNew.TV helps you discover & share things you love", "data-count"=>"horizontal", "data-via"=>"mynewtv"
+   
+  %div.likes_button    
+    %fb:like{:layout=>"button_count", :show_faces=> "false", :width=>"300", :action => "like", :font => "arial", :colorscheme => "dark", :height => "35",:allowTransparency => "true", :href=> "http://mynew.tv"}
+    
+    
+  %div{:style => "clear:both;"}
+  
+  = render 'sidebar'
+
+    
+  #player
+    #left_panel
+      - unless user_signed_in?
+        #signup_message
+          %h2 See more great videos!        
+          .catch_phrase                   
+            %p  MyNew.TV helps you discover & share videos you love
+          .links
+            = fb_connect_button
+            &nbsp;Or&nbsp;&nbsp;
+            = link_to 'Sign Up', new_registration_path('user'), :class => 'awesome blue'
+      #playlist.panel_bar{:style => "margin-top:25px"}
+        .awesome-bar.right_side.blue#playlist_bar
+          = image_tag ("icons/dark/btn_tv.png"), :height => 20, :width => 20, :class => "panel_mark"
+          %span Coming up on this channel
+        .videos_list    
+          %ul.list-view{:style => "margin-top:15px;"}
+            %li#recs
+              
+              %ul.videos#video_thumbs        
+      
+    #video
+      #title &nbsp;
+      #player_wrapper
+        #absolute_container{:style => "position:absolute;"}
+          #mynewtv_player
+      #controls
+        = render 'player/controls'
+      
+
+        %span#time
+          %span#duration &nbsp;
+      #rating_message &nbsp;
+      
+      = render 'shared/share'
+      
+      #keywords &nbsp;
+      #description &nbsp;
+
+
+        
+:javascript
+  var userChannel = '#{@user.to_param}';
+  var userId = '#{@user.id}';
+  var userSignedIn = #{user_signed_in?};
+  var publishFacebook = #{user_signed_in? ? current_user.publish_to_fb? : 'false'};
+  var publishTwitter = #{user_signed_in? ? current_user.publish_to_tw? : 'false'};
+  
+  
+  var Mynewtv = null;
+  document.observe("dom:loaded", function() {
+    Mynewtv = new MynewtvChannelPlayerController();
+    Mynewtv.userId = userChannel;
+    searchFollowers();    
+    Mynewtv.userSignedIn = userSignedIn;
+    Mynewtv.publish_facebook = publishFacebook;
+    Mynewtv.publish_twitter = publishTwitter;
+    Mynewtv.userId = userId;
+    });
+  
+  
+  $$('.title_section').each (function(element) {
+    Event.observe(element,'click', toggleBar );
+  });
+  
+  function MynetvPlayerReady(e) {
+    Mynewtv.requestUserChannelPlaylist();
+  }
+  
+  
+  $('btn_search_user').observe('click', searchUsers);  
+  $('search_users_input').observe('keyup', searchUsers);
+  
+  $('btn_search_followers').observe('click', searchFollowers);  
+  $('search_followers_input').observe('keyup', searchFollowers);
+  
+  
+- if user_signed_in? && current_user != @user
+  - if current_user.following?(@user)
+    :javascript
+      $('unfollow_this').show();
+  - else
+    :javascript
+      $('follow_this').show();
+- elsif user_signed_in? && current_user == @user
+
+-else  
+  :javascript  
+    $('signup_and_follow').show();
+  
+

@@ -1,0 +1,80 @@
+
+<div id="rec_audio_window" style="display:none" >
+
+<div id="rec_window_header">
+<%= image_tag "icons/light/20/btn_cerrar.png", :name => "close", :id => "close_rec_window", :alt => "Close", :onclick => "toggleRecorder()" %>
+</div>
+<% form_for :audio_comment, :url => {:controller => "audio_comments", :action => "create"}, :html => {:id => "flv_form"}, :remote => true do |f| %>
+  <span id="form_audio_comment_message" class="error_form" style="display:none"></span>
+
+  <%= f.hidden_field :video_id, :id => "video_commented" %>
+  <%= f.hidden_field :location, :id => "audio_location" %>
+  <%= f.hidden_field :size, :id => "audio_duration" %>
+
+  <input type="hidden" id="" value="-1" >
+
+  <span>You are going to record a comment about: </span>
+  <span class="video_title" id="video_title"></span>
+  <ul>
+  <li>
+  <%= f.label :title %>
+  <span class="field_instructions">(required)</span>
+  </li>
+  <li>
+  <%= f.text_field :title, :maxlength => 35 %>
+  </li>
+  <li>
+  <%= f.label :description %>
+  <span class="field_instructions">(optional - up to 150 characters)</span>
+  </li>
+  <li>
+  <%= f.text_area :description, :maxlength => 150 %>
+  </li>
+  <li>
+  <%= f.label :location, "Audio record" %>
+  <div  style="position: relative; z-index:100; ">
+  <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="320" height="140" id="audiorecorder" align="middle">
+  <param name="allowScriptAccess" value="always" />
+  <param name="bgcolor" value="#eeeeee" />
+  <param name="wmode" value="opaque">
+  <param name="movie" value="audiorecorder.swf?userId=123&recorderId=456&sscode=html" />
+  <embed bgcolor="#eeeeee"  src="audiorecorder.swf?userId=123&recorderId=456&sscode=html" width="350" height="140" name="audiorecorder"  allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer"  />
+  </object>
+  </div>
+  </li>
+  <li>
+  <%= f.label :public, "Visibility" %>
+  <div id="visibily_checks">
+      <%= check_box :public, :friends, {:disabled => true, :checked => true, :readonly => true, :id => "friend_check"} %>
+      <span class="checks_label" title="Visible to followers/following">Only friends</span>
+      <%= check_box :public, :all, {  :id => "all_check", :checked => true, } %>
+      <span class="checks_label" title="Everyone in MyNewTv">Public</span>
+  </div>
+
+  </li>
+  <li>
+  <%= f.submit "Submit", :class => "awesome red", :id => "submit_flv_form" %>
+  </li>
+  </ul>
+
+
+  <% end %>
+
+
+  </div>
+
+  <script>
+
+
+  function btSavePressed(streamName,streamDuration,userId,recorderId){
+  //this function is called when the SAVE button is pressed and it is called with 4 parameters:
+    //streamName: the file name of the new audio recording on the media server including the .flv extension
+    //streamDuration: duration of the recorded audio file in seconds but accurate to the millisecond (like this: 4.322)
+    //userId: the userId sent via flash vars or avc_settings.php
+  //recorderId: the recorderId sent via flash vars, to be used when there are many recorders on the same web page
+    $("audio_location").value = streamName;
+    $("audio_duration").value = streamDuration;
+    //alert("btSavePressed("+streamName+","+streamDuration+","+userId+","+recorderId+")");
+  }
+  </script>
+

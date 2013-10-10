@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xliff version="1.0" xml:lang="en">
+
+  <file datatype="plaintext" original="audiorecorder.fla" source-language="EN">
+    <header></header>
+    <body>
+      <trans-unit id="001" resname="IDS_AH">
+        <source>Mic:</source>
+      </trans-unit>
+      <trans-unit id="002" resname="IDS_BT_PAUSE">
+        <source>Pause</source>
+      </trans-unit>
+      <trans-unit id="003" resname="IDS_BT_PLY">
+        <source>Play</source>
+      </trans-unit>
+      <trans-unit id="004" resname="IDS_BT_REC">
+        <source>Record</source>
+      </trans-unit>
+      <trans-unit id="005" resname="IDS_BT_REC_AG">
+        <source>Record Again</source>
+      </trans-unit>
+      <trans-unit id="006" resname="IDS_BT_SAV">
+        <source>Save</source>
+      </trans-unit>
+      <trans-unit id="007" resname="IDS_BT_STP">
+        <source>Stop</source>
+      </trans-unit>
+      <trans-unit id="008" resname="IDS_CHANGE">
+        <source>Change</source>
+      </trans-unit>
+      <trans-unit id="009" resname="IDS_CONNECTING">
+        <source>Connecting to the video server...</source>
+      </trans-unit>
+      <trans-unit id="010" resname="IDS_LOADING SETTINGS">
+        <source>Loading the settings file...</source>
+      </trans-unit>
+      <trans-unit id="011" resname="IDS_TXT_CONNECTSTR_ERR">
+        <source>The connectionstring in avc_settings is empty, you should review the installation instructions regarding that!</source>
+      </trans-unit>
+    </body>
+  </file>
+
+</xliff>

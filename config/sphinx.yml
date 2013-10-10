@@ -1,0 +1,19 @@
+development:
+  pid_file: "/home/matias/mynewtv/svn/log/searchd.pid"
+  searchd_log_file: "/home/matias/mynewtv/svn/log/searchd.log"
+  config_file: "/home/matias/mynewtv/svn/config/development.sphinx.conf"
+  #searchd_binary_name: "usr/local/bin/searchd"
+  #indexer_binary_name: "usr/local/bin/indexer"
+  #bin_path: "/usr/local/bin/search"
+
+production:
+  pid_file: /home/mynewtv2/shared/searchd.pid
+  searchd_file_path: /home/mynewtv2/shared/db/sphinx
+  bin_path: /usr/local/bin
+  searchd_log_file: /home/mynewtv2/shared/log/searchd.log
+  config_file: /home/mynewtv2/shared/production.sphinx.conf
+  mem_limit: 128M
+
+
+
+

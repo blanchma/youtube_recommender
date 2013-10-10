@@ -1,0 +1,83 @@
+<%= render 'javascripts' %>
+
+<%= render 'player/sidebar' %>
+
+<div id="page_title">
+  <% if @channel %>
+    You are watching <%= @channel.name %> channel
+  <% elsif @user && @owner %>
+    You are watching your own playlist
+  <% elsif @user %>
+    You are watching <%= @user.nickname %> channel
+  <% elsif params[:public] %>
+    You are watching MyNew.Tv Public channel
+  <% else %>
+
+  <% end %>
+</div>
+
+<div id="channels_link">
+<% if @owner && @channel %>
+  <div id="channel_info" >
+    <%= image_tag "icons/channel/smile_on.png" %>
+    <span id="count_likes">0</span>
+    <%= image_tag "icons/channel/angry_on.png" %>
+    <span id="count_hates">0</span>
+    <%= image_tag "icons/channel/unfollow.png", :id => "follow_current" %>
+    <span id="count_followers" title="Followers" >0</span>
+  </div>
+<% end %>
+</div>
+
+
+
+
+<div id='player'>
+  <div id='player_mask'>
+    <div class="center cols" id="video_mask"  >
+      <div id='player_wrapper'>
+        <div id='title'>&nbsp;</div>
+        <div id='mynewtv_player'></div>
+      </div>
+    </div>
+
+    <div style='clear:both'></div>
+
+    <div id="bottom_section" >
+      <%= render 'player/controls' %>
+
+      <%= render 'player/source' %>
+    </div>
+
+  </div>
+</div>       
+
+
+
+<% if @playlist %>
+  <div style='clear:both'></div>
+  <%= render :partial => 'player/playlist' %>
+<% end %>
+
+
+
+<% if @user  %>
+  <div style='clear:both'></div>
+  <%= render :partial => 'channels/index' %>
+<% end %>
+
+
+<% if user_signed_in? && current_user.debug %>
+  <div style='clear:both'></div>
+  <br/>
+  <div id='category'>&nbsp;</div>
+  <div id='keywords'>&nbsp;</div>
+  <div id='description'>&nbsp;</div>
+<% end %>
+
+<% if @playlist %>
+<%= render :partial => 'player/debug' %>
+<% end %>
+
+<%= render :partial => 'bootstrap' %>
+

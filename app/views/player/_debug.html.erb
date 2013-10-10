@@ -1,0 +1,45 @@
+
+<% if user_signed_in? && current_user.debug %>
+  <div style='clear:both'></div>
+  <div id='debug'>
+    <b>Query</b>
+    <pre id='query'></pre>
+    <b>Explanation</b>
+    <pre id='explanation'></pre>
+    <b>Coefficients</b>
+    <p id='coefficients'>
+      RATING_SCORE_COEFFICIENT   =
+      <%= RATING_SCORE_COEFFICIENT %>
+      <br/>
+      VIEWS_SCORE_COEFFICIENT    =
+      <%= VIEWS_SCORE_COEFFICIENT %>
+      <br/>
+      PHRASES_SCORE_COEFFICIENT  =
+      <%= PHRASES_SCORE_COEFFICIENT %>
+      <br/>
+      CATEGORY_SCORE_COEFFICIENT  =
+      <%= CATEGORY_SCORE_COEFFICIENT %>
+    </p>
+    <b>10 Top Hits</b>
+    <table id='debug_table'>
+      <thead>
+        <tr>
+          <th id='title_debug_table'>Title</th>
+          <th>YT</th>
+          <th id='score'>
+            <b>Score =</b>
+          </th>
+          <th>Views Score +</th>
+          <th>Rating Score +</th>
+          <th>Category Score +</th>
+          <th>Avg Word Score =></th>
+          <th>Tags(p_weight * p_rare * p_unseen)</th>
+        </tr>
+      </thead>
+      <tbody id='debug_table_rows'></tbody>
+    </table>
+    <br/>
+    <b>Hits for phrases</b>
+    <div id='phrase_scores_searched'></div>
+  </div>
+<% end %>

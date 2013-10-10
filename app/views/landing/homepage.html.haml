@@ -1,0 +1,34 @@
+#homepage
+  %h1 MyNew.TV helps you discover & share things you love
+  %p.demo= image_tag('homepage/demo.jpg')
+  %ol.why
+    %li Give MyNew.TV some topics you like
+    %li Rate videos as you watch them
+    %li Get an endless channel tailored to you!
+    %li
+      It's
+      %span.fun free & fun!
+  %p.signup
+    = link_to 'Sign Up in 2 clicks!', new_user_registration_path, :class => 'awesome magenta'
+  %div.or  
+    %p.or Or
+    %p.public
+      = link_to 'Try our Public Channel', public_path, :class => 'awesome yellow'
+    %p.or 
+    %p.public
+      
+
+    
+    
+  #about
+    %h2 About MyNew.TV
+    %p
+      MyNew.TV is entertainment like you've never seen before. Completely personalized to your tastes, MyNew.TV
+      learns from your every zap and vote, giving you a never-ending stream of video tailored to your tastes.
+      You'll discover stuff out there you won't believe you hadn't seen yet, and keep coming back for more.
+    %p
+      MyNew.TV is an
+      = link_to 'abInventio', 'http://abinventio.com', :target => :new
+      company. abInventio is an invention factory that uses math, technology, and
+      hard work to make life a bit easier and more fun. abInventio was recognized as Most Innovative Company
+      of the Year in North America distinguished honoree by the 2010 International Business Awards.

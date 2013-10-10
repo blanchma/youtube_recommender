@@ -1,0 +1,24 @@
+
+  <div id="playlist" style="display:none">
+    <div class="top_awesome_bar blue"></div>
+    <div id="close_bar">
+        <div id="arrow_current_video"></div>
+        <%= image_tag "icons/light/20/btn_cerrar.png", :name => "Hide", :id => "hide_playlist", :alt => "Hide", 
+        :class => "close", :title => "Hide playlist" %>
+    </div>
+    <a class="edge buttons_awesome blue" id="previous_playlist" title="Press Left key to jump to last video"  >
+        <%= image_tag "icons/small_arrow_left.png" %></a>
+      
+    <div class="horizontal_list">
+      <ul id="video_list">
+      <div id="playlist_loading">
+       <%= image_tag "icons/ajax-loader_111.gif" %>
+      </div>
+      </ul>
+    </div>
+      <a class="edge buttons_awesome blue" id="next_playlist" title="Press Right key to jump to last video"  >
+        <%= image_tag "icons/small_arrow_right.png" %></a>
+  </div>
+
+
+  <div style='clear:both'></div>

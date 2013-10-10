@@ -1,0 +1,170 @@
+- content_for(:bottom_script) do
+  = javascript_include_tag 'prototype/mynewtv_player_ui'
+  = javascript_include_tag 'hashtrack.packed'
+
+#header.player
+  = image_tag('/images/player/logo.jpg')
+  %span.user_info
+    Hi, 
+    = current_user.email
+    = link_to 'Logout', destroy_user_session_path, :class => 'awesome'
+    = link_to 'Prefs', preferences_path, :class => 'awesome'
+    = link_to 'My Channel', user_channel_path(current_user), :class => 'awesome green'
+    
+
+    - if current_user.admin?
+      = link_to "Dbg: #{current_user.debug?}", player_debug_toggle_path, :class => 'awesome'
+      = link_to "Admin panel", admin_debug_path, :class => 'awesome orange'      
+#middle
+  
+  %div.tweet_button
+    = link_to "Tweet", "http://twitter.com/share", :class=>"twitter-share-button", "data-url"=>"http://mynew.tv", "data-text"=>"MyNew.TV helps you discover & share things you love", "data-count"=>"horizontal", "data-via"=>"mynewtv"
+    
+  %div.likes_button    
+    %fb:like{:layout=>"button_count", :show_faces=> "false", :width=>"220", :action => "like", :font => "arial", :colorscheme => "dark", :height => "35",:allowTransparency => "true"}
+    
+    
+  %div{:style => "clear:both;"}
+  
+  = render 'sidebar'
+    
+  #player
+    #left_panel
+      #mark_bar
+        .awesome-bar.right_side.blue#playlist_mark.marks{:style => "position:relative; left: 45px"}
+          = image_tag ("icons/dark/btn_tv.png"), :height => 20, :width => 20, :class => "panel_mark"
+        .awesome-bar.right_side.orange#audios_mark.marks{:style => "position:relative; left: 45px"}
+          = image_tag ("icons/mic.png"), :height => 20, :width => 20, :class => "panel_mark"
+        
+      
+      #audios.panel_bar{:style => "position:relative; left: 425px; display:none"}
+        .awesome-bar.right_side.orange#audios_bar
+          = image_tag ("icons/mic.png"), :height => 20, :width => 20, :class => "panel_mark"
+          %span Audio comments
+          = image_tag ("icons/dark/right_arrow.png"), :height => 20, :width => 20, :class => "panel_hide", :id => "audios_hide"
+        %div
+          #button_to_rec
+            %a{:href =>"#", :onclick => "toggleRecorder(); return false;", :class => "awesome"}
+              %span.rec_label REC
+              = image_tag ("icons/mini_rec.png"), :height => 20, :width => 20, :style=>"vertical-align:middle"
+          = render 'audio_recorder'         
+          .audio_list
+            %ul#results_audios
+          
+      #playlist.panel_bar
+        .awesome-bar.right_side.blue#playlist_bar
+          = image_tag ("icons/dark/btn_tv.png"), :height => 20, :width => 20, :class => "panel_mark"
+          %span Your playlist
+          = image_tag ("icons/dark/right_arrow.png"), :height => 20, :width => 20, :class => "panel_hide", :id => "playlist_hide"
+        #search-section
+          = text_field_tag :query, params[:query], :id => 'search_field', :size => 30, :type => "search", :class => 'query'
+          = link_to_function image_tag("icons/light/20/btn_lupa.png"), :class => 'awesome', :id => 'btn_search_videos'
+          = image_tag "player/grey_circle_loader.gif", :id => 'loader', :width => 30, :height => 30, :style => 'visibility: hidden'
+        .videos_list
+          %ul.list-view
+            %li#recs
+              .list-title
+                %h3 Coming up on MyNew.TV:
+              %ul.videos#video_thumbs        
+      
+  
+    = render 'source'
+  
+    #video
+      #title &nbsp;
+      #player_wrapper
+        #absolute_container{:style => "position:absolute;"}
+          #mynewtv_player
+      #controls
+        = render 'controls'
+        %span#time
+          %span#duration &nbsp;
+       
+      #rating_message &nbsp;
+      
+     
+      
+      = render 'shared/share'
+      
+      #category &nbsp;
+      #keywords &nbsp;
+      #description &nbsp;
+      
+
+   
+
+      
+- if current_user.debug
+  #debug
+  
+    %b Query
+    %pre#query
+    
+    %b Explanation 
+    %pre#explanation
+    
+    %b Coefficients
+    %p#coefficients
+      RATING_SCORE_COEFFICIENT   = 
+      = RATING_SCORE_COEFFICIENT
+      %br
+      VIEWS_SCORE_COEFFICIENT    = 
+      = VIEWS_SCORE_COEFFICIENT
+      %br
+      PHRASES_SCORE_COEFFICIENT  = 
+      = PHRASES_SCORE_COEFFICIENT
+      %br
+      CATEGORY_SCORE_COEFFICIENT  =
+      = CATEGORY_SCORE_COEFFICIENT
+     
+    %b 10 Top Hits  
+    %table#debug_table
+      %thead
+        %tr          
+          %th#title_debug_table Title
+          %th YT
+          %th#score 
+            %b Score =
+          %th Views Score +
+          %th Rating Score + 
+          %th Category Score +
+          %th Avg Word Score =>
+          %th Tags(p_weight * p_rare * p_unseen)
+      %tbody#debug_table_rows
+      
+    %br/
+    %b Hits for phrases    
+    #phrase_scores_searched
+
+        
+:javascript
+  var Mynewtv = null;
+  var userId = #{current_user.id};
+  var MynewtvEvents = null;
+  var RTMP_SERVER = '#{RTMP_SERVER}';
+  
+  document.observe("dom:loaded", function() {
+    Mynewtv = new MynewtvPlayerController();
+    setTimeout("searchFollowers()", 4000);
+    setTimeout("searchFollowing()", 5000);   
+    MynewtvEvents = new MynewtvEventDisplayer(2000,60000);
+    MynewtvEvents.configEvents();    
+    Mynewtv.publish_facebook = #{current_user.publish_to_fb?};
+    Mynewtv.publish_twitter = #{current_user.publish_to_tw?};
+    Mynewtv.userSignedIn =  #{user_signed_in?};
+    Mynewtv.userId = userId;
+   
+    //setInterval(Mynewtv.updatePlayerInfo.bind(Mynewtv), 500);    
+  });
+  
+  function onPlayerReady(e) {
+    //console.log("loaded");
+    Mynewtv.requestInitialVideos(1);  
+  }
+
+    
+
+  
+  
+
+

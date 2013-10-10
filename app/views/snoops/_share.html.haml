@@ -1,0 +1,49 @@
+#share_box
+  %div
+    %span Share this video on
+    = link_to_function image_tag("icons/facebook_share.png"), :onclick => "Mynewtv.shareOnFacebook()"
+    %div#share_tweet_button
+      = link_to "Tweet", "http://twitter.com/share", :class=>"twitter-share-button", "data-url"=>"http://mynew.tv", "data-text"=>"MyNew.TV helps you discover & share things you love", "data-count"=>"none", "data-via"=>"mynewtv"
+    - if user_signed_in?
+      %div{:style => "margin-top:5px"}
+        %span Publish all your likes on
+        
+        - if current_user.oauth2_connected? && current_user.publish_to_fb?
+          =link_to_function image_tag("icons/btn_facebook_color.png", :height => "25", :width => "25", :id => "publish_fb", :publish=>"true"), :onclick => "Mynewtv.publishAllLikedOnFacebook()"        
+        - else
+          =link_to_function image_tag("icons/light/btn_facebook.png", :height => "25", :width => "25", :id => "publish_fb", :publish=>"false"), :onclick => "Mynewtv.publishAllLikedOnFacebook()"
+      
+        - if current_user.twitter_connected? && current_user.publish_to_tw?    
+          =link_to_function image_tag("icons/btn_twitter_color.png", :height => "25", :width => "25", :id => "publish_tw", :publish=>"true"), :onclick => "Mynewtv.publishAllLikedOnTwitter()"
+        - else
+          =link_to_function image_tag("icons/light/btn_twitter.png", :height => "25", :width => "25", :id => "publish_tw", :publish=>"false"), :onclick => "Mynewtv.publishAllLikedOnTwitter()"
+  
+  
+/
+  #share_box
+    .title
+
+    #fb_box.box
+      .pic
+        %img{:src => "/images/icons/facebook_25.png"}
+      .body
+        - if current_user && current_user.oauth2_connected?
+          #fb_single_post{:style=>"margin-top:1em"}
+            = share_on_fb_popup_button("Share this video on Facebook")
+          #fb_auto_post{:style=>"margin-top:1em"}
+            - form_for_toggle_publishing do |f|
+              = f.check_box :publish_to_fb
+              = f.label :publish_to_fb, "Publish all Liked videos on Facebook"
+        - else
+          %p Facebook access disabled
+      
+    #tw_box.box
+      .pic
+        %img{:src => "/images/icons/twitter_25.png"}
+      .body
+        - if current_user && current_user.twitter_connected?
+          "Twitter connected"
+        - else
+          = link_to "Share this video", "/auth/twitter"
+
+

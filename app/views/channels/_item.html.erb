@@ -1,0 +1,15 @@
+<li>
+            <div class="channel_thumb" id="channel_item_<%= channel.id%>"  >
+              <%= image_tag "icons/btn_tv_35.png" %>
+              <span class="name">
+              <%= link_to channel.name, channel.link, :title => channel.link  %></span>
+              <div class="sub_actions">
+            <% if @owner %>
+                <%= link_to (image_tag 'icons/red_trash.png', :title => "Remove this channel", :height => 14, :width => 14), user_channel_path(@user.id, channel.id), :method => :delete, :remote => true   %>
+            <% end %>
+<%= link_to (image_tag 'icons/orange_play.png', :title => "Play this channel", :height => 14, :width => 14), channel.link %>
+
+              </div>
+            </div>
+        
+</li>

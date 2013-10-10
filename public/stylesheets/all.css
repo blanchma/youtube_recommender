@@ -1,0 +1,233 @@
+/*
+Copyright (c) 2007, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.net/yui/license.txt
+version: 2.4.1
+*/
+html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym {border:0;font-variant:normal;}sup {vertical-align:text-top;}sub {vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}legend{color:#000;}
+
+html {
+  background: #444444 url("/images/layout/stripe.gif") repeat fixed top left; }
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  color: #333333;
+  line-height: 1.5em; }
+
+h1 {
+  font-size: 1.5em; }
+
+h2 {
+  font-size: 1.125em; }
+
+p {
+  margin-bottom: 1em; }
+
+strong {
+  font-weight: bold; }
+
+table {
+  border-collapse: separate; }
+  table td {
+    border: 1px solid #999999; }
+
+#header, #content {
+  width: 960px;
+  margin: 0 auto; }
+
+#header {
+  background: #222222 url("/images/layout/header_gradient.gif") repeat-x top left;
+  background-color: #222222; }
+
+#content {
+  background-color: white;
+  width: 920px;
+  padding: 20px 20px 40px 20px; }
+
+
+/*  
+    awesome buttons are based on a blog post by ZERB
+    Read there blog post for more information:
+    "Super awesome Buttons with CSS3 and RGBA":http://www.zurb.com/article/266/super-awesome-buttons-with-css3-and-rgba 
+    
+    this buttons are even more awesome, as the need only one color for all three states,
+    and have an super awesome onclick state
+*/
+
+/* set an awesome color for the buttons, feel free to add new colors like an .awesome.green or .awesome.secondary */
+.awesome {
+  background-color: #111;
+  color: #fff !important;
+}
+
+/* the awesome size gets set here. Feel Free to add new sizes, like .awesome.small or .small.large   */
+.awesome        { padding: 5px 10px 6px !important; font-size: 13px !important; }
+.awesome:active	{ padding: 6px 10px 5px !important; }
+
+/* Touch the rest at your onw risk. */
+.awesome { 
+  border: 0 !important; 
+  cursor: pointer !important; 
+  font-style: normal !important; 
+  font-weight: bold !important; 
+  font: inherit !important;
+  line-height: 1 !important; 
+  position: relative !important; 
+  text-align: cente !important;
+  text-decoration: none !important; 
+  
+  /* vertical margin is the oposite of button's awesomeness */
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  
+  /* not all browser support these, but who cares? */
+  text-shadow: 0 -1px 1px rgba(0,0,0,0.25), -2px 0 1px rgba(0,0,0,0.25) !important; 
+  border-radius: 5px !important; 
+  -moz-border-radius: 5px !important; 
+  -webkit-border-radius: 5px !important; 
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important; 
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+  
+  /* one image for all states 
+     see http://www.alistapart.com/articles/sprites */
+  background-image: -moz-linear-gradient(top, rgba(255,255,255,.2), rgba(150,150,150,.2), rgba(0,0,0,.0)) !important;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(0,0,0,.0))) !important;
+  
+  /* cross browser inline block hack 
+     see http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/ */
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: middle !important;
+  *display: inline !important;
+  position: relative;
+  
+  /* IE luv */
+  zoom: 1;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#30ffffff,endColorstr=#10000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+  
+  /*disable text selection (Firefox only)*/
+  -moz-user-select: none;
+}
+/* hide selection background color */
+.awesome::selection {
+	background: transparent;
+}
+
+.awesome {
+  outline: 0; /*remove dotted line, works for links only*/
+}
+.awesome::-moz-focus-inner {
+  border: none; /* remove dotted lines for buttons */
+}
+.awesome:focus,
+.awesome:hover {
+  background-image: -moz-linear-gradient(top, rgba(255,255,255,.4), rgba(150,150,150,.3), rgba(0,0,0,.0)) !important;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.4)), color-stop(0.5, rgba(150,150,150,.3)), to(rgba(0,0,0,.0))) !important;
+  #filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#50ffffff,endColorstr=#20000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
+}
+.awesome:active	{ 
+  background-image: -moz-linear-gradient(top, rgba(0,0,0,.2), rgba(150,150,150,.2), rgba(255,255,255,.2)) !important;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0,0,0,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(255,255,255,.2))) !important;
+  -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.7) !important; 
+  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.7) !important;
+  
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#20000000,endColorstr=#50ffffff) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=315,strength=1);
+}
+
+/* Safari doesn't support inset box shadow, so we better remove it */
+@media screen and (-webkit-min-device-pixel-ratio:0){
+  .awesome:active	{ 
+    -webkit-box-shadow: none;
+  }
+}
+
+
+
+.blue.awesome {
+background-color: #2daebf;
+}
+.red.awesome {
+background-color: #e33100;
+}
+.magenta.awesome {
+background-color: #a9014b;
+}
+.orange.awesome {
+background-color: #ff5c00;
+}
+.yellow.awesome {
+background-color: #ffb515;
+}
+
+#header.player {
+  color: #cccccc;
+  background: #222222 url("/images/player/header_gradient.png") repeat top left;
+  margin-bottom: 0;
+  width: 100%; }
+  #header.player img {
+    vertical-align: middle; }
+  #header.player span.user_info {
+    float: right;
+    margin-top: 0.8em;
+    margin-right: 2em; }
+
+#middle {
+  *display: inline-block;
+  background-color: #222222;
+  color: white;
+  padding-top: 1em; }
+  #middle:after {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden; }
+
+#player {
+  width: 960px;
+  margin: 0 auto; }
+  #player #video {
+    width: 640px; }
+    #player #video #title {
+      font-weight: bold; }
+    #player #video #time {
+      float: right; }
+
+#playlist {
+  width: 300px;
+  float: right; }
+  #playlist li {
+    *display: inline-block;
+    height: 89px;
+    margin-bottom: 0.5em; }
+    #playlist li:after {
+      content: " ";
+      display: block;
+      height: 0;
+      clear: both;
+      visibility: hidden; }
+    #playlist li p.title {
+      font-size: 0.813em;
+      font-weight: bold;
+      line-height: 1; }
+    #playlist li p.author {
+      color: #999999;
+      font-size: 0.625em; }
+    #playlist li img {
+      float: left;
+      margin-right: 0.313em; }
+    #playlist li:hover {
+      cursor: pointer;
+      background-color: #444444; }
+
+#debug {
+  padding-left: 20px;
+  font-size: 0.75em;
+  background-color: white; }
+  #debug table tbody tr:nth-child(odd) {
+    background-color: #7be89b; }
+  #debug table tbody td {
+    vertical-align: top; }
+    #debug table tbody td .word {
+      font-weight: bold; }

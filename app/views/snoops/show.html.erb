@@ -1,0 +1,104 @@
+<% content_for :bottom_script do %>
+  <%= javascript_include_tag 'snoop-object' %>
+<% end %>
+
+  <%= render 'sidebar' %>
+
+<div id="page_title">
+  You are snooping what <%= @user.nickname %> is watching.
+</div>
+
+
+ 
+  <div style='clear:both'></div>
+
+  <div id='player'>
+    <div id='player_mask'>
+      <div class="center cols" id="video_mask"  >
+        <div id='player_wrapper'>
+          <div id='title'>&nbsp;</div>
+          <div id='mynewtv_player'></div>
+        </div>
+      </div>
+
+ <div style='clear:both'></div>
+
+  <div id="bottom_section" style="display:none">
+    <%= render 'controls' %>
+  </div>
+
+    </div>
+  </div>       
+
+ 
+
+<div style='clear:both'></div>
+
+
+
+  <div style='clear:both'></div>
+
+
+
+ <div style='clear:both'></div>
+  <br/>
+
+  <% if user_signed_in? && current_user.debug %>
+    <div id='category'>&nbsp;</div>
+    <div id='keywords'>&nbsp;</div>
+    <div id='description'>&nbsp;</div>
+  <% end %>
+
+
+<script type='text/javascript'>
+
+  var player = null;
+  var playerView = null;
+
+  var snoopController = null;
+  var snoopModel = null;
+  var snoopView = null;
+  var feedsController = null;
+
+ <% if user_signed_in? %>
+    var userSignedIn =  true;
+    var userOnDebug = <%=  current_user.debug %>;
+    var signedUserId = <%=  current_user.id %>;         
+  <% else %>
+    var userSignedIn =  false;
+    var userOnDebug = false;
+   <% end %>
+
+    var userId = <%= @user.id %>;
+    var userName = '<%= @user.nickname %>';
+    var userSlug = '<%= @user.slug %>';
+
+  /* After load */
+  document.observe("dom:loaded", function() {
+
+       // currentUser = new User(userName, userId, userSlug, owner);    
+    
+
+    //hashtrack.init();    
+    snoopModel = new SnoopModel();    
+    snoopView = new SnoopView(snoopModel);
+    snoopController = new SnoopController(snoopModel);
+    player = new Player();
+    playerView = new PlayerView ();
+
+  <% if user_signed_in? && current_user.activated? %>   
+      feedsController = new FeedsController(5,60);
+      feedsController.configFeeds();
+     
+      searchFollowing.delay(3); 
+      searchFollowers.delay(4);
+
+  <% end %>    
+
+    setInfoMessage.delay(2,"<%= flash[:notice] %>");
+
+  });
+
+
+</script>
+

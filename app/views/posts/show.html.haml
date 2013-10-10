@@ -1,0 +1,111 @@
+- content_for(:bottom_script) do
+  = stylesheet_link_tag "player"
+  
+
+#header.player
+  = image_tag('/images/player/logo.jpg')
+
+  %span.user_info
+    = link_to 'Sign In', new_user_session_path, :class => 'awesome green'
+  
+#middle
+  
+  %div.tweet_button
+    = link_to "Tweet", "http://twitter.com/share", :class=>"twitter-share-button", "data-url"=>"http://mynew.tv", "data-text"=>"MyNew.TV helps you discover & share things you love", "data-count"=>"horizontal", "data-via"=>"mynewtv"
+   
+  %div.likes_button    
+    %fb:like{:layout=>"button_count", :show_faces=> "false", :width=>"300", :action => "like", :font => "arial", :colorscheme => "dark", :height => "35",:allowTransparency => "true"}
+    
+    
+  %div{:style => "clear:both;"}
+  
+  = render 'sidebar'
+
+  #player
+    #left_panel
+      - unless user_signed_in?
+        #signup_message{:style=>"margin-top: 30px;  height: 170px;"}
+          %h2 See more great videos!        
+          .right_col          
+            %p  MyNew.TV helps you discover & share videos you love
+            =# link_to 'Click Here!', new_user_registration_path, :class => 'awesome magenta', :id => "click_here"
+            
+            = fb_connect_button
+            %p{:style => "padding-top: 10px; height: 15px; font-weight: normal;"} Or, if you don't use Facebook          
+            = link_to 'Sign Up on MyNew.TV', new_registration_path('user'), :class => 'awesome blue'
+
+   
+
+    #video
+      #title &nbsp;
+      #player_wrapper
+        #absolute_container{:style => "position:absolute;"}
+          #mynewtv_player
+      #controls
+        =# render 'controls'
+   
+        %span#time
+          %span#duration &nbsp;
+      #rating_message &nbsp;
+      
+      = render  'shared/share'
+      
+:javascript
+  var Mynewtv = null;
+  var userId = #{@video.more.nil? ? 'null' : @video.more[:user_id] };
+    var postedVideoId = #{@video.id};
+    
+  document.observe("dom:loaded", function() {
+    Mynewtv = new MynewtvPlayerController();    
+    if (userId) {
+       searchFollowers();
+     }
+    Mynewtv.userSignedIn =  #{user_signed_in?};
+    Mynewtv.userId = userId; 
+              
+  });
+  
+  function onPlayerReady(e) {
+    Mynewtv.player = jwplayer();
+    Mynewtv.requestPostVideo(postedVideoId);
+  }
+
+
+  /*
+  function onYouTubePlayerReady(playerId) {
+    // log('player ready! Player ID:', playerId);
+    // log('setting player...',Mynewtv.playerId);
+    Mynewtv.player = $(Mynewtv.playerId);
+    Mynewtv.player.addEventListener('onStateChange', 'onYouTubePlayerStateChange');
+    Mynewtv.player.addEventListener('onError',       'onYouTubePlayerError');
+    Mynewtv.userSignedIn =  #{user_signed_in?};    
+    Mynewtv.userId = userId;
+
+  }
+  */
+  $$('.title_section').each (function(element) {
+    Event.observe(element,'click', toggleBar );
+  });
+  
+  
+  if (userId) {
+    $('btn_search_user').observe('click', searchUsers);  
+    $('search_users_input').observe('keyup', searchUsers);
+    
+    $('btn_search_followers').observe('click', searchFollowers);  
+    $('search_followers_input').observe('keyup', searchFollowers);
+  }
+    
+- if @user 
+  :javascript  
+    $('signup_and_follow').show();
+
+
+  
+
+  
+
+
+
+  
+

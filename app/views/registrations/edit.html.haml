@@ -1,0 +1,20 @@
+%h2 Your Preferences
+= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f|
+  = devise_error_messages!
+  .group
+    = f.label :email
+    = f.text_field :email    
+  .group
+    = f.label :password
+    = f.password_field :password
+    %p.help Leave blank if you don't want to change it
+  .group
+    = f.label :password_confirmation
+    = f.password_field :password_confirmation
+ 
+  .group
+    = f.submit "Update", :class => 'awesome orange'
+/ %h3 Cancel my account
+/ %p
+/   Unhappy?
+/   = link_to "Cancel my account", registration_path(resource_name), :confirm => "Are you sure?", :method => :delete

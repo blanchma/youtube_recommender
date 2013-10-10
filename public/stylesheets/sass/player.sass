@@ -1,0 +1,156 @@
+=clearfix
+  *display:                 inline-block
+  &:after
+    content:                " "
+    display:                block
+    height:                 0
+    clear:                  both
+    visibility:             hidden
+
+#header.player
+  color: #ccc
+  background: #222 url('/images/player/header_gradient.png') repeat top left
+  img
+    vertical-align: middle
+  margin-bottom: 0
+  width: 100%
+  
+  
+  span.user_info
+    float: right
+    margin-top: 0.8em
+    margin-right: 2em
+    
+    form
+      display: inline
+
+#middle
+  +clearfix
+  background-color: #222
+  color:            white
+  padding-top: 1em
+  
+#player
+  width: 960px
+  margin: 0 auto
+  
+
+  #video
+    width: 640px
+    #title
+      font-weight: bold
+
+    #time
+      float: right
+
+    #rating_messaqge
+      margin-bottom: 1em
+    #fb_single_post
+      margin-bottom: 1em
+  
+#playlist
+  width: 300px
+  float: right
+  
+  li
+    +clearfix
+    height: 89px
+    margin-bottom: 0.5em
+
+    
+    p.title
+      font-size: 0.8125em
+      font-weight: bold
+      line-height: 1
+      
+    p.author
+      color: #999
+      font-size: 0.625em
+      
+    img
+      float: left
+      margin-right: 0.3125em
+      
+    &:hover
+      cursor: pointer
+      background-color: #444
+      
+    p.about
+      font-size: 0.75em
+
+  li.signup
+    text-align: center
+    h2
+      color: #0090f2
+      text-shadow: #4b4b4b 1px 1px -1px
+    &:hover
+      cursor: default
+      background-color: transparent
+
+#post_form
+  background-color: #555
+  border: 1px solid #333
+  padding: 0.5em
+  margin-top: 1em
+  
+  font-size: 0.875em
+  p
+    font-weight: bold
+    margin: 0
+  form
+    label
+      font-size: 0.875em
+      display: block
+    textarea
+      width: 100%
+      height: 2.5em
+      display: block
+      margin-bottom: 0.5em
+    input[type='text']
+      height: 1.5em
+      width: 400px
+
+#post_popup
+  color: #fff
+  height: 500px
+  padding: 0 2em
+  background: #222
+  
+    
+#debug
+  padding-left: 20px
+  
+  font-size: 0.75em
+  background-color: white
+  
+  table
+    tbody
+      tr:nth-child(odd)
+        background-color: #7be89b
+      
+      td
+        vertical-align: top
+        
+        .word
+          font-weight: bold
+          
+#playlist
+  #signup_message
+    margin-top: 2em
+    padding-left: 1em
+    text-align: center
+    
+    h2
+      // text-transform: uppercase
+      color: #0090f2
+      font-size: 24px
+      
+    p
+      font-size: 0.875em
+      padding: 0.5em
+      color: #ddd
+      
+    p.free
+      color: #0090f2
+    p.signup
+      font-size: 1.4em

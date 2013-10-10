@@ -1,0 +1,49 @@
+  <div id="channels_link">
+      <%= link_to "Watch MyNewTv channel", public_path, :class => "awesome yellow" %>
+  </div>
+
+
+  
+<div class="channels">
+
+  <h1>All MyNew.TV Channels</h1>
+
+  <div id="categories"></div>
+
+  <div id="channels_container">
+    <table id ="channel_list" cellpadding=0 border=0 cellspacing="0">
+        <thead>
+          <th>Name </th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Videos</th>
+          <th><%= image_tag "icons/channel/smile_on.png" %></th>
+          <th><%= image_tag "icons/channel/angry_on.png" %></th>
+          <th>Visits</th>
+          <th><%= image_tag "icons/channel/follow.png" %></th>
+        </thead>
+
+  <tbody>
+      <% @channels.each do |channel| %>
+        <tr>
+       
+          <td class="name">
+             <% link_to channel.link do %>
+                <%= channel.name %>
+             <% end %> 
+          </td>
+          <td class="description"><%= channel.description ? channel.description : "-" %></td>
+          <td class="category"><%= channel.category ? channel.category : "-" %></td>
+          <td class="videos"><%= channel.videos.count %></td>
+          <td class="likes"><%= channel.likes  %></td>
+          <td class="hates"><%= channel.hates %></td>
+          <td class="visits"><%= channel.visits %></td>
+          <td class="followers" title="Followers"><%= channel.followers.count %></td>
+        </tr>
+      <% end %>
+  </tbody>
+    </table>
+  </div>
+
+
+</div>

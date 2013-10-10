@@ -1,0 +1,29 @@
+- only searching w/ phrases that for sure appear in videos
+- calculating p_rare to favor rare words for search
+- calculating tfidf for each word in a video
+- New version of ruby with native unicode support
+
+
+TODO
+- using weighted average for video scoring
+- coeff of correllation
+- percentiles: split ratings/views into 99 chunks, take the top 1%, make them all the same, repeat for each percentile
+
+coeff of correl.:
+
+  go through ratings
+    for each video:
+      get avg_word_score, rating_score, views_score
+        aws: [0.99, 0.44, 0.12]
+         rs: [0.88, 0.98, 0.54]
+         vs: [0.23, 0.45, 0.98]
+           
+    ratings: [1, 0, -1]
+            
+
+
+To calculate the coeff-corr of p_rare for each word in a video:
+  - compare the p_like of each video
+  
+  
+  

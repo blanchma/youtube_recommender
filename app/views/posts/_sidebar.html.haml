@@ -1,0 +1,57 @@
+- if @user 
+  #sidebar
+    
+    .to_channel_section
+      %a{:href=>"/channels/#{@user.id}", :id => "link_channel", :onmouseover => "$('from_img_box').src='/images/icons/dark/btn_tv.png'", :onmouseout => "$('from_img_box').src='/images/icons/light/btn_tv.png'"}
+        .left_col
+          %img{:id => "from_img_box", :src => "/images/icons/light/btn_tv.png", :title => "MyNewTV"}
+        .right_col
+          %span{:style => "text-align: center;"} Watch more videos from  #{@user.nickname} at his channel
+          
+    %div{:style => "clear:both;"}  
+ 
+    .follow_section.choose-follow#signup_and_follow{:style=>"display:none;"}
+      %a{:href=>"#{new_user_registration_path}", :id => "follow_chanel", :onmouseover => "$('big_follow').src='/images/icons/btn_follow_dark_blue.png'", :onmouseout => "$('big_follow').src='/images/icons/btn_follow_blue.png'"}
+        %img{:id => "big_follow", :src => "/images/icons/btn_follow_blue.png", :title => "Follow", :height => 30, :width => 30}        
+        %span{:style => "text-align: center;"} Follow    
+      
+    .title_section.dark_blue
+      %span Share this post
+      %img{:id => "min_share", :src => "/images/icons/light/20/btn_minimize.png", :height => "14", :width => "14",:alt => "min"}/
+    #wrapper_share.wrapper  
+      %div
+        %div.tweet
+          = link_to "Tweet", "http://twitter.com/share", :class=>"twitter-share-button", "data-url"=>"http://mynew.tv/channels/#{@user.to_param}", "data-text"=>"Watch great videos here", "data-count"=>"nonel", "data-via"=>"mynewtv"
+        %div.likes
+          %fb:like{:layout=>"button_count", :show_faces=> "false", :width=>"100", :action => "like", :font => "arial", :colorscheme => "dark", :height => "35",:allowTransparency => "true", :href => "http://mynew.tv/channels/#{@user.to_param}"}
+    
+    .title_section.blue
+      %span Search a friend
+      %img{:id => "max_users", :src => "/images/icons/light/20/btn_maximize.png", :height => "14", :width => "14",:alt => "max"}/
+    #wrapper_users.wrapper{:style => "display:none"}  
+      #search_user.search-section
+        %div
+          = text_field_tag :search_users_input, "", :class => "input_sidebar", :autocomplete => "off"
+          = link_to_function (image_tag "icons/light/20/btn_lupa.png"), :name => nil, :id => "btn_search_user", :class => "btn_search_sidebar"
+      %div.results_box
+        %ul#results_user.results
+        
+        %div#paginate_users.pagination
+          %ul
+    
+    .title_section.yellow
+      %span Followers
+      %img{:id => "min_followers", :src => "/images/icons/light/20/btn_minimize.png", :height => "14", :width => "14",:alt => "min"}/
+    #wrapper_followers.wrapper 
+      #search_followers.search-section
+        %div
+          = text_field_tag :search_followers_input, "", :class => "input_sidebar", :autocomplete => "off"
+          = link_to_function (image_tag "icons/light/20/btn_lupa.png"), :name => nil, :id => "btn_search_followers", :class => "btn_search_sidebar"
+      %div.results_box
+        %ul#results_followers.results
+          
+        %div#paginate_followers.pagination
+          %ul      
+          
+    
+   

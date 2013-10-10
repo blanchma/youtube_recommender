@@ -1,0 +1,36 @@
+
+<div id="controls" >
+    <% if @playlist %>
+      <div class="left_buttons">
+        <%= link_to_function image_tag("player/btn_prev.png", :height => "40", :width => "40"), :class => 'buttons_awesome', :title => "Back - Press Left key", :id => "previous_video" %>
+
+            <% if user_signed_in? %>
+              <%= link_to_function image_tag("player/btn_smile_light.png", :height => "40", 
+              :width => "40",:id => "like_current",), :class => 'buttons_awesome  ', :title => "I Liked it - Press Up key" %>
+
+              <%= link_to_function image_tag("player/btn_angry_light.png", :height => "40", 
+              :width => "40", :id => "hate_current"), :class => 'buttons_awesome  ', :title => "I Hated it (Press Down key)" %>  
+            <% end %>
+
+            <%= link_to_function image_tag("player/btn_next.png", :height => "40", :width => "40"), :class => 'buttons_awesome', :title => "Skip it - Press Right key", :id => "next_video" %>
+               <div id="current_rating_loading" style="visibility: hidden">
+                     <%= image_tag "icons/ajax-loader.gif" %>
+               </div>
+        </div>
+    <% end %>
+
+    <%= render 'player/share' %>
+
+    <% if @playlist %>
+      <div class="right_buttons">
+        <%= link_to_function image_tag("player/btn_playlist.png", :id => "show_playlist"), :class => 'buttons_awesome blue ', :title => "Show Playlist" %>
+      </div>
+    <% end %>
+<%#= link_to_function image_tag("icons/light/btn_bookmark.png", :id => "btn_bookmark", :height => "40", :width => "40", :title => "Bookmark"), :onclick => 'Mynewtv.bookmarkCurrentVideo();return false;', :class => 'buttons_awesome green' %>
+
+<%#= link_to_function image_tag("icons/light/btn_star.png", :id => "btn_star", :height => "40", :width => "40", :title => "Favorite"), :onclick => 'Mynewtv.favoriteCurrentVideo();return false;', :class => 'buttons_awesome orange' %>
+
+<%#= link_to_function "Share", :id => "btn_share", :title => "Share", :onclick => '$("share_box").toggle(); return false;', :class => 'awesome dark_blue'%>
+
+</div>
+

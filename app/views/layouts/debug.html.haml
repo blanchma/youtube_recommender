@@ -1,0 +1,33 @@
+!!!
+%head
+  %title MyNew.TV
+  = stylesheet_link_tag "reset-min", "layout", "forms", "awesome_buttons", "fb_button", "debug"
+  = javascript_include_tag :defaults, 'prototype/mynewtv_player', 'prototype/mynewtv_prefs', 'prototype/shortcut'
+  = csrf_meta_tag
+  = javascript_include_tag "http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"
+
+%body
+  #header
+    - if user_signed_in?
+      = link_to image_tag('/images/layout/logo.jpg'), player_path
+      = link_to 'Player', player_path, :class => 'awesome orange'
+    - else
+      = link_to image_tag('/images/layout/logo.jpg'), root_path
+    %span.user_info
+      
+      - if current_user.admin?
+        - if User.pending.count > 0
+          = link_to "Activate Users", users_to_activate_path, :class => 'awesome orange'
+
+        = link_to 'Phrase Scores', phrase_scores_path, :class => 'awesome'
+        = link_to 'Rating History', history_ratings_path, :class => 'awesome'
+
+        = link_to 'Logout', destroy_user_session_path, :class => 'awesome red'
+        
+      
+  #content
+    = show_flash
+    = show_browser_warning?
+    = yield
+
+  = render 'layouts/google_analytics'

@@ -1,0 +1,88 @@
+%h3
+  Time:
+  = Time.now
+
+- if @limited
+  %h4 YOU ARE ONLY SEEING THE TOP 3000 PHRASES. OTHERWISE IT TAKES TOO LONG TO GENERATE THIS PAGE AND THE SERVER MELTS.
+  
+%p
+  The
+  %span{:style => 'background-color: #0f4'}
+    column in green
+  is the one currently used to select words to search for (and assign their weights to the search!)
+
+%table
+  %tbody
+    %tr.odd
+      %td
+        %strong p_like:
+      %td #likes/#total_votes_this_word
+    %tr.even
+      %td
+        %strong weight:
+      %td
+        Math.tanh(total/8) (to lift the p_weight)
+    %tr.odd
+      %td
+        %strong p_tanh:
+      %td
+        weight * p_like + (1-weight) * self.user.average_rating
+    %tr.even
+      %td
+        %strong p_tanh (unvoted words where total=0)
+      %td
+        self.user.average_rating
+    %tr.odd
+      %td
+        %strong
+          user.average_rating
+      %td
+        avg(all_voted_on_words' p_like)
+    %tr.even
+      %td
+        %strong p_weighted:
+      %td user.avg_p_like + (p_tanh-user.avg_p_like)
+    %tr.odd
+      %td
+        %strong p_unseen:
+      %td seconds_left_of_suppression/172800 (48 hours in secs) 
+    %tr.even
+      %td
+        %strong idf
+      %td Math.log(total_#videos_in_db/#videos_with_this_word)
+    %tr
+      %td
+        %strong p_rare
+      %td
+        Math.tanh(idf / maximum_idf)
+    %tr.odd
+      %td
+        %strong score
+      %td p_weighted * p_rare  * p_unseen
+
+%br/
+  
+%table
+  %tr
+    %th Word
+    %th Likes
+    %th Hates
+    %th p_like
+    %th p_tanh
+    %th p_unseen
+    %th p_rare
+    %th p_weighted
+    %th{:style => 'background-color: #00FF44;'} score
+  - @phrases.each do |phrase|
+    %tr
+      %td= phrase.text
+      %td= phrase.likes
+      %td= phrase.hates
+      %td= phrase.p_like
+      %td= phrase.p_tanh
+      %td= sprintf('%.4f', phrase.p_unseen) 
+      %td= phrase.p_rare
+      %td= phrase.p_weighted
+      %td= sprintf('%.6f', phrase.score.to_f)
+      
+

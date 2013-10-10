@@ -1,0 +1,172 @@
+
+#middle
+
+  #search-section
+    = text_field_tag :query, params[:query], :id => 'search_field', :size => 30, :class => 'query'
+    = button_to_function "Search", "",:name => nil, :class => 'blue awesome', :id => 'btn_search'
+    
+    = image_tag "icons/ajax-loader.gif", :id => 'loader', :style => 'visibility: hidden'
+
+  #search-debug
+  
+  %ul
+    %li 
+      %strong Video Score: 
+      user's score for each video (MyNewTv score algorithm)
+    
+    %li 
+      %strong Relevance: 
+      1 + (matches / keywords)
+    
+    %li 
+      %strong Suppression match: 
+      Coincidence of suppressed words in video's keywords
+    
+    %li 
+      %strong Rarity: 
+      1 + (Total of suppressed phrases  / (1 + suppressed phrases in each video) ) OR 1
+    
+    %li 
+      %strong Total Score: 
+      video_score * relevance * rarity
+  
+  
+    
+  %table{:id => "stopwords_table", :class=> "debug_table", :align => "center", :style => "min-width: 200px"}
+    %caption Words filtered as stopword
+    %thead
+      %tr
+        %th Stopwords         
+    %tbody
+      %tr
+        %td 
+
+    
+  %table{:id => "loserwords_table", :class=> "debug_table", :align => "center", :style => "min-width: 200px" }      
+    %thead
+      %tr
+        %th New words
+    %tbody
+      %tr
+        %td 
+
+
+  
+  %table{:id => "words_table", :class=> "debug_table", :align => "center"}
+    %caption Phrases matched
+    %thead
+      %tr
+        %th Phrase Id
+        %th Text
+        %th Videos count
+        %th IDF
+        %th Last Crawled at
+    %tbody
+     
+      
+  %span Time to find phrases ids
+  %span#time_to_find_phrases 1
+  
+  %br/
+  %br/
+  .checkboxes{:style => 'height: 180px'}
+    %table{:id => 'checkbox_left', :class => 'borderless'}
+      %tr
+        %td 
+          Title &nbsp; 
+          %input{:id => '0', :type => 'checkbox', :checked => 'true'}
+      %tr
+        %td 
+          Keywords &nbsp; 
+          %input{:id => '1', :type => 'checkbox', :checked => 'true'}
+      %tr
+        %td 
+          Description &nbsp; 
+          %input{:id => '2', :type => 'checkbox', :checked => 'true'}
+     
+      %tr    
+        %td 
+          Relevance &nbsp; 
+          %input{:id => '3', :type => 'checkbox', :checked => 'true'}
+      %tr
+        %td 
+          RatingScore &nbsp; 
+          %input{:id => '4', :type => 'checkbox', :checked => 'true'}
+      %tr
+        %td 
+          ViewsScore &nbsp; 
+          %input{:id => '5', :type => 'checkbox', :checked => 'true'}
+      %tr
+        %td       
+          UserScore &nbsp; 
+          %input{:id => '6', :type => 'checkbox', :checked => 'true'}
+        
+    %table{:id => 'checkbox_right', :class => 'borderless'}
+    
+    %a{:name => 'top'} 
+    %table{:id => 'goto_table', :class => 'borderless'}
+      %thead
+        %tr
+          %th{:rowspan=>2} Go to 
+      %tbody
+        
+  %table{:id => "videos_table", :class=> "debug_table", :align => "center" }
+    %caption Founded videos
+    %thead
+      %tr
+        %th{:rowspan=>2} Id
+        %th{:rowspan=>2, :class => '0'} Title
+        %th{:rowspan=>2, :class => '1'} Keywords
+        %th{:rowspan=>2, :class => '2'} Description
+        %th{:rowspan=>2, :class => '3'} Relevance
+        %th{:rowspan=>2, :class => '4'} RatingScore
+        %th{:rowspan=>2, :class => '5'} ViewScore
+        %th{:rowspan=>2, :class => '6'} UserScore
+    %tbody
+    
+  %br/
+  
+  %span Time to find videos ids
+  %span#time_to_find_videos 1
+   
+  %br/
+  
+  %span Time to count matches 
+  %span#time_to_count_matches 2
+
+  %br/
+      
+  %span Real total time 
+  %span#total_time
+  
+  %br/
+  
+  %span Build time (time to build data for debug console) 
+  %span#build_time
+      
+:javascript  
+ 
+  var Mynewtv = null;
+  document.observe("dom:loaded", function() {
+    Mynewtv = new MynewtvPlayerController();
+  });
+
+  $('btn_search').observe('click', querySearch);
+  
+    
+  
+  function querySearch() {
+    if (Mynewtv != null) {
+        Mynewtv.player = $(Mynewtv.playerId);
+        Mynewtv.querySearchDebugVideos( $('search_field').value  );
+    }
+    else
+    {
+     alert ("Wait! Debug engine loading...") 
+    }
+  }
+
+  shortcut.add("Enter",function() {
+    querySearch($('search_field').value );
+  });
+  

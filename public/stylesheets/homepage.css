@@ -1,0 +1,63 @@
+#homepage {
+  *display: inline-block; }
+  #homepage:after {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden; }
+  #homepage h1 {
+    font-weight: bold;
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 0.875em; }
+  #homepage .demo {
+    float: left;
+    margin-left: 2em;
+    width: 450px; }
+  #homepage p.signup {
+    font-size: 2em;
+    text-align: center; }
+    #homepage p.signup a {
+      padding: 10px 20px 12px !important; }
+  #homepage span.fun {
+    font-weight: bold;
+    color: #444444;
+    background-color: #fefdcf;
+    padding: 0 0.25em; }
+  #homepage ol.why {
+    margin-bottom: 1.5em; }
+    #homepage ol.why li {
+      font-size: 1.25em;
+      margin-bottom: 0.75em;
+      list-style: decimal inside; }
+  #homepage #about {
+    padding: 0 5em;
+    margin-top: 5em;
+    clear: both; }
+    #homepage #about h2 {
+      font-size: 1.25em;
+      font-weight: bold;
+      color: #666666; }
+    #homepage #about p {
+      color: #555555; }
+      
+.public {
+    font-size: 1.2em;
+    text-align: center; 
+}
+
+.public a {
+      padding: 10px 20px 12px !important; 
+}
+      
+p.or {
+text-align:center;height:40px
+}
+      
+div.or {
+     display: block;
+    float: right;
+    margin-top: 25px;
+    width: 400px;
+}

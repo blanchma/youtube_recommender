@@ -1,0 +1,25 @@
+%h1 Your Preferences
+= form_for @user, :url => preferences_path, :method => :put do |f|
+  - if @user.errors.any? 
+    #errorExplanation    
+      %ul  
+        %li{:style => "color: Red;"}= @user.errors.full_messages.last 
+    
+  .group
+    = f.label :custom_nickname, "Nickname"
+    = f.text_field :custom_nickname
+    %p.help=  "Your public channel: http://mynew.tv/channels/#{@user.nickname}"
+  .group
+    = f.check_box :private_channel
+    = f.label :private_channel, "Make my channel private (only you can view it)"
+    %p.help Only you will be able to watch http://mynew.tv/channels/#{@user.nickname}
+
+  .group
+    = f.submit "Update", :class => 'awesome orange'
+
+%p
+  %br
+  To change your password or email address, we'll need to ask for your current password!
+  %br
+  = link_to 'Change Your Password or Email', edit_user_registration_path(current_user), :class => 'awesome '
+  = link_to 'Return to your player', player_path, :class => 'awesome green'

@@ -1,0 +1,7 @@
+#share_box{:style=> "margin-top:-20px;"}
+  %div
+    %span Share this on
+    = link_to_function image_tag("icons/facebook_share.png"), :onclick => "Mynewtv.shareOnFacebook()"
+    %div#share_tweet_button
+      = link_to "Tweet", "http://twitter.com/share", :class=>"twitter-share-button", "data-url"=>"http://mynew.tv", "data-text"=>"MyNew.TV helps you discover & share things you love", "data-count"=>"none", "data-via"=>"mynewtv"
+   
